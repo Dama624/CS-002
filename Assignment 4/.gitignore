@@ -1,0 +1,3 @@
+seamcarve/bin/(?!\.dummy)*
+seamcarve/obj/(?!\.dummy)*
+dna/align

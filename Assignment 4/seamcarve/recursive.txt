@@ -1,0 +1,14 @@
+1)    What part of the above algorithm uses dynamic programming?
+The part that uses dynamic programming is the finding of a minimal path by calculating the optimal path to each pixel.
+We are effectively memoizing top-down when we create our cost value table.
+
+2)    The seam-finding algorithm can be implemented recursively, without dynamic programming. Explain how.
+For a pixel M(x, y) with coordinates (x, y) and the saliency map S(x, y):
+M(x, y) = S(x, y) + min(M(x-1, y-1), M(x, y-1), M(x + 1, y-1)).
+
+3)    For an NxN image, what is the complexity of the recursive algorithm without dynamic programming? State the complexity in big-O notation, as a function of N.
+We call M 3 times per call (approximately; we're ignoring edge cases). We call it N times, were N is the width.
+O(N * (3 ^ N)).
+
+4)    Using the recursive algorithm without dynamic programming, how long would it take to find a seam on a 50x50 image if 1 billion computations were made per second? State a reasonable lower bound. Hint: The answer should be huge.
+1.138 * 10 ^ 18 years. Effectively never.

@@ -1,0 +1,628 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin-top: -21px;
+        margin-left: 66px;
+        border-left: 1px solid gray;
+        padding-left: 24px;
+        margin-bottom: -15px;
+    }
+
+    div.content {
+        padding-top: 21px;
+        padding-bottom: 15px;
+    }
+
+    h1 {
+
+    }
+
+    hr {
+        color: gray;
+        background-color: gray;
+        height: 1px;
+        margin-left: -24px;
+        margin-right: -24px;
+        border: 0px solid gray;
+    }
+
+    .draft {
+        color: #008080;
+    }
+
+    table {
+        padding: 0;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    tr {
+        margin: 0;
+        padding: 2px;
+    }
+    td {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+    th {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+
+
+    span.keyword {
+        font-weight: bold;
+    }
+    span.emph {
+        font-style: italic;
+    }
+    span.hilite {
+        text-decoration: underline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.author {
+        float: right;
+        margin-top: 27px;
+        color: grey;
+    }
+
+    .code {
+        font-family: monospace;
+    }
+    pre.code {
+        background: ghostwhite !important;
+        border: 2px dashed grey !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+        padding-right: 21px !important;
+        padding-left: 21px !important;
+    }
+    div.attention {
+        background: lightcoral;
+        border: 2px dashed red;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.other {
+        background: plum;
+        border: 2px dashed mediumpurple;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.quote {
+        background: lightblue;
+        border: 2px dashed steelblue;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.hint {
+        background: lightgreen;
+        border: 2px dashed green;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.points {
+        float: left;
+        text-align: right;
+        margin-left: -88px;
+        min-width: 50px;
+    }
+    li div.points {
+        margin-left: -128px;
+    }
+    div.points.easy {
+        color: #008000;
+    }
+    div.points.hard {
+        color: #800000;
+        font-weight: bold;
+    }
+</style>
+<title>CS2 Assignment 8: Numerics</title>
+</head>
+
+<body>
+<div class="content">
+
+<div class="author">Author: Ellen Price</div>
+<h1>CS2 Assignment 8: Numerics</h1>
+<h2>Due Tuesday, March 1, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on numerics. You will be implementing a
+numeric integrators, root solvers, a Discrete Fourier Transform, and a
+spectral synthesizer.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named
+<span class="code">cs2week8-[NAME].zip</span> or a tar.gz file named
+<span class="code">cs2week8-[NAME].tar.gz</span>, and upload it to the
+Week 8 assignment module on Moodle.</p>
+
+<h2>Assignment Background</h2>
+
+<p>Today, we use computers to do a <b>lot</b> of numerical computations,
+particularly in the sciences; whether you use a graphing calculator
+or <i>Mathematica</i>, you almost certainly use some kind of
+computerized system for doing calculations you would rather not do by
+hand. Sometimes, we need computers to perform calculations that
+we cannot do on paper. In this assignment, you will explore several
+canonical examples of numerical methods with C++.</p>
+
+<h3>Numerically solving differential equations</h3>
+
+<p>Differential equations are ubiquitous throughout the sciences,
+but not all differential equations have closed-form solutions; even
+so, we might still like to get some useful information from them.
+What we cannot solve analytically, we <i>can</i> solve numerically.
+Three common algorithms of numerically integrating differential
+equations are the forward, backward, and symplectic Euler methods.</p>
+
+<p>All three of the Euler methods follow a similar pattern: Figure
+out the next state by updating the current state according to some
+rule to approximate the equations of motion of the system that is being
+simulated. The update rules are defined differently for each method,
+however. Consider some system with a position <i>x</i> and
+velocity <i>v</i>; we have only the functional form of the
+acceleration, <i>f(t, x) = dv/dt</i>. If we use the forward Euler method,
+then the position <i>x</i> after <i>n</i> timesteps will be given
+by</p>
+
+<center><img src="images/ForwardEuler.gif" /></center>
+
+<p>where δ is a small timestep. Thus, we find out the next position
+and velocity by examining only the current position and velocity. Note
+that we can find them in either order, since the new velocity does not
+depend on the new position.</p>
+
+<p>How might we go about this differently? We could do something really
+extreme and base the next step on the next step; don't panic yet, though,
+because it's not that bad. The update rule becomes</p>
+
+<center><img src="images/BackwardEuler.gif" /></center>
+
+<p>After seeing the equations, maybe you've realized what to do. If we
+substitute the first equation into the second one, we get an equation in
+terms of the new position, old position, and old velocity (one unknown).
+After solving this equation, we can find the new position and thus the
+new velocity. This is the backward Euler.</p>
+
+<p>We have one left - symplectic Euler. It is actually very similar to
+the forward Euler, and its update rule is given below.</p>
+
+<center><img src="images/SymplecticEuler.gif" /></center>
+
+<p>As you can see, we make only one change from forward Euler: We use
+the new velocity to calculate the new position instead of using the
+current velocity. All of the Euler methods behave somewhat differently
+after many timesteps, an effect that you will observe in this week's
+assignment.</p>
+
+<h3>Numerically finding roots</h3>
+
+<p>Just like not every differential equation can be solved in an exact
+way, there are some analytic functions that do not have closed-form
+solutions, even when a root obviously exists. Hopefully, you have
+already encountered some of these in your studies. We'll discuss two
+methods of finding roots of functions for which we know the analytic
+form.</p>
+
+<p>A simple (but powerful) approach is to assume we know that a
+single root exists between two endpoints <i>[a, b]</i>. We examine the
+midpoint of the interval as a first guess for the location of the
+root; call this point <i>m</i>. If <i>f(m)</i> has the same sign as
+<i>f(a)</i>, then <i>m</i> should be the new "low" limit in the
+interval; otherwise, we set <i>m</i> to be the new "high" limit. The
+location of the root is guaranteed to be in this updated interval, and
+we have increased the precision to which we know its location. Call the
+new interval <i>[a', b']</i>. Formally, the precision is now
+|<i>b' - a'</i>|, where "|.|" is the absolute value function. We can
+continue this process, in a loop, until we find the root or until we
+have the answer to within the precision we want. A decent illustration
+is shown below, <b>image courtesy clear.rice.edu</b>. One disadvantage to
+this method is that it converges in linear time; we might like to do
+better than that.</p>
+
+<center><img src="images/Bisection.png" /></center>
+
+<p>A more sophisticated method of root-finding is the Newton-Raphson
+or just Newton method; it relies on Taylor's theorem. We begin with
+a single guess for the location of the root, <i>not</i> an interval
+this time, and we also require the analytic form of the first derivative
+of the function. Call the guess <i>x0</i>; we can expand around this point
+to find</p>
+
+<center><img src="images/Taylor.gif" /></center>
+
+<p>Specifically, we want <i>f(x) = 0</i>, which allows us to solve for
+the unknown <i>x</i>, approximately; call this guess <i>x1</i>. It is</p>
+
+<center><img src="images/Taylor2.gif" /></center>
+
+<p>As before, this method can be iterated until we have found the root
+or until we have found it to the precision we want. A good approximation
+of this precision is <i>|f(xn) / f'(xn)|</i>, where <i>xn</i> is the
+last guess for the root we made. You can study the figure below,
+<b>image courtesy chem.sc.edu</b>, to help you visualize this method.</p>
+
+<center><img src="images/NewtonRaphson.gif" /></center>
+
+<h3>Discrete Fourier Transform</h3>
+
+<p>I will summarize Fourier's theorem here without proof. Given
+any periodic function <i>f(x)</i>, we can approximate <i>f(x)</i>
+by</p>
+
+<center><img src="images/FourierApprox.gif" /></center>
+
+<p>As <i>n</i> approaches infinity, we approach the function <i>f</i>
+exactly:</p>
+
+<center><img src="images/FourierExact.gif" /></center>
+
+<p>The image below may be familiar to you; it shows discrete Fourier
+series approximations of a square wave. As the order of the approximation
+increases, it approaches the true shape of the function.</p>
+
+<center><img src="images/FourierTransforms.gif" /></center>
+
+<p>That seems like a really cool result, if we had an exact functional
+form for <i>f</i>. If we just have empirical data (which might have
+errors!), there's a problem. The Discrete Fourier Transform provides
+a way around that issue by transforming an arbitrary data array
+from the time domain to the frequency domain (where you can imagine
+"domain" to mean "the x-axis"). Thus, the result of the DFT is
+intensity as a function of frequency instead of as a function of
+time. This is incredibly useful if you want to know what components
+make up a complex signal, which is why the DFT is used so liberally
+throughout signal analysis and processing. You will be asked to implement
+the DFT only; we do not expect you to prove any theorems.</p>
+
+<h2>Prerequisites</h2>
+
+<p><ul>
+    <li>g++ 4.6.x+</li>
+    <li>libgl1-mesa-dev</li>
+    <li>libglu1-mesa-dev</li>
+    <li>freeglut3-dev</li>
+    <li>libsdl1.2-dev</li>
+    <li>libsdl-gfx1.2-dev</li>
+    <li>doxygen</li>
+</ul>
+
+Ask a TA if you need help retrieving these packages, or if these packages
+appear to be missing from the CS cluster.</p>
+
+<h2>Assignment (20 points)</h2>
+
+<p>For this assignment, you will implement a stable summation algorithm,
+a Discrete Fourier Transform (DFT) algorithm, a spectral synthesizer,
+numeric integrators, and root solvers.</p>
+
+<h3>Part 0: Stable summation with the Kahan algorithm</h3>
+
+<div class="quote">All of the objectives in this section should be
+completed in the <span class="code">kahan</span> subdirectory.</div>
+
+<p>As a quick warm-up, let's think about rounding errors. When adding
+numbers with very different orders of magnitude, rounding errors can
+have a profound effect. This can be illustrated by a quick (and very
+contrived) example in <span class="code">kahan/kahan.cpp</span>. The
+example code adds up all the numbers in a vector one at a time and
+returns the result &mdash; and it's wrong! We add 1 to (10^8)*(10^-8) and
+get back 1, where we would usually expect 2. You'll be writing some code
+that does a much better job.</p>
+
+<p><div class="points easy">0.5</div>In your own words, in a
+<span class="code">README</span> file, explain what is going on that
+causes the naive summation to return the wrong result.</p>
+
+<p><div class="points easy">0.5</div>Look up the Kahan summation
+algorithm (or another stable summation algorithm of your choice) online
+and implement it in <span class="code">kahan/kahan.cpp</span>.
+Demonstrate that your code returns the right result <b>using the same
+test vector as for naive summation</b> by printing out the value at the
+end of <span class="code">main()</span>.</p>
+
+<h3>Part 1: Solving a physical system numerically (planetary orbits!)</h3>
+
+<div class="quote">All of the objectives in this section should be
+completed in the <span class="code">orbits</span> subdirectory.</div>
+
+<h4>Euler methods of integration</h4>
+
+<p>In the Assignment Background, I gave the equations for the three
+Euler methods; now, you will write them for a specific physical
+system, a planet orbiting a star. Open
+<span class="code">src/EulerIntegrator.cpp</span>; the functions you will
+write are members of the <span class="code">EulerIntegrator</span>
+namespace &mdash; keep the differences between namespaces and classes
+in mind! You will write the <span class="code">forward_euler</span>,
+<span class="code">backward_euler</span>, and
+<span class="code">symplectic_euler</span> functions inside this
+namespace; we've provided the function declarations for you.</p>
+
+<div class="hint">You'll notice that none of those functions return
+anything; instead, we use the behavior of pointers to update the values
+of the input variables. Make sure you don't overwrite a value until
+you're done with it! The inputs are <span class="code">x, y</span> for
+position and <span class="code">vx, vy</span> for velocity. The small
+timestep is passed in the argument <span class="code">h</span>.</div>
+
+<p>Also, circular orbits are <i>boring</i>, so we'll be using eccentric
+orbits to make things more interesting. For our purposes, the equations
+below give the acceleration in the <i>x</i> and <i>y</i> directions:</p>
+
+<center><img src="images/Orbits.gif" /></center>
+
+<p><div class="points easy">1</div>Implement the forward Euler method
+in <span class="code">forward_euler</span>.</p>
+
+<p><div class="points easy">1</div>Implement the symplectic Euler method
+in <span class="code">symplectic_euler</span>.</p>
+
+<p><div class="points easy">2</div>For some systems, solving the
+simultaneous equations to get equations for backward Euler is relatively
+simple; unfortunately, this is not the case for the elliptic orbit
+equations. Instead of asking you to find a way to do this, we will
+instead ask you to make an assumption that will make the problem easier:
+If the eccentricity of the orbit is 0 (i.e. the orbit is circular), then
+the denominator in the acceleration function is a constant; it is
+equal to the cube of the radius of the circle. Furthermore, for our
+system, the radius is 1. With this in mind, implement the backward
+Euler method in <span class="code">backward_euler</span>, using the
+simplifying assumption described above.</p>
+
+<p>To test any of these methods, run <span class="code">bin/orbits</span>
+from a terminal prompt. You can use 'b' to select the backward Euler,
+'f' to select the forward Euler, and 's' to select the symplectic Euler;
+to quit at any time, use 'q' or Escape.</p>
+
+<p><div class="points easy">1</div>Observe your orbiting systems for
+a while (this shouldn't actually take that long) so that you can see
+their long-term behavior. You should observe three distinct end cases
+for the three methods. In a file <span class="code">README</span>,
+describe the behaviors of the three methods in your own words. Which one
+produces the most accurate long-term behavior? You can use the energy
+value printed at the terminal to help you; remember that energy should
+be (roughly) constant because we are approximating a bound system.</p>
+
+<h4>Function root solving</h4>
+
+<p>A different way to solve the same system is with numerical function
+solvers. In the Assignment Background, I described a couple of very
+common methods of finding roots of analytic functions. Here, you will
+implement them in the <span class="code">Solver</span> namespace,
+found in <span class="code">src/Solver.cpp</span>. We have provided
+function headers for you.</p>
+
+<p><div class="points easy">1</div>Implement the bisection method for
+finding the root of an arbitrary analytic function, which takes
+a single value as input and outputs a single value, in the
+<span class="code">bisection</span> method. Continue to solve until
+your precision is less than or equal to
+<span class="code">PRECISION</span>.</p>
+
+<p><div class="points easy">2</div>Implement the Newton-Raphson method for
+finding the root of an arbitrary analytic function, which takes
+a single value as input and outputs a single value, in the
+<span class="code">newton_raphson</span> method. Continue to solve until
+your precision is less than or equal to
+<span class="code">TOLERANCE</span>.</p>
+
+<p><div class="points easy">1</div>Test your new solvers by writing
+a simple testsuite, in <span class="code">src/testsuite.cpp</span>,
+solving a few analytically-solvable equations and a few
+non-analytically-solvable ones. Show that they both converge
+to the same root, and make sure it is the correct one.
+<a href="www.wolframalpha.com">Wolfram|Alpha</a> can help you determine
+the correct answer for many non-analytic problems. Make sure your
+testsuite prints out useful information; at minimum, you should print
+the function you are finding the root for, the correct answer, and the
+answer your numerical function found.</p>
+
+<p>To get the shape of the orbit, we will solve an equation of the
+form</p>
+
+<center><img src="images/OrbitEquation.gif" /></center>
+
+<p>using the Newton-Raphson solver you just wrote. This code has already
+been written for you. To test it, run <span class="code">bin/orbits</span>
+from a terminal prompt. You can use 'n' to select the Newton-Raphson
+solver; to quit at any time, use 'q' or Escape.</p>
+
+<h3>Part 2: Discrete and Fast Fourier Transforms</h3>
+
+<div class="quote">All of the objectives in this section should be
+completed in the <span class="code">fourier</span> subdirectory.</div>
+
+<p><div class="points easy">1</div>First, we want to make sure you
+conceptually understand the DFT. Consider the simple case of an
+input that is a pure sine wave. What should the Fourier transform
+(not the DFT!) look like? How might the DFT of the same signal look
+different, keeping in mind that it is discrete? What would you
+reasonably expect to happen as the function becomes more and more
+complicated? Place your responses to these questions in a file
+called <span class="code">README</span> in the base directory
+of your assignment.</p>
+
+<p>Although the discrete Fourier transform is mostly used to analyze
+existing signals, we will focus on the synthesis of signals instead,
+based on a given frequency spectrum. As it turns out, the frequency
+content of many natural phenomena and/or shapes are fairly predictable,
+in a sense. For instance, something as seemingly random as the  flood
+levels of the Nile river over the years exhibit a frequency spectrum of
+the form <i>1/f</i>, i.e., the power spectral density is very close to
+inversely proportional to the frequency. Similarly, the shapes of various
+mountains have fairly similar spectra &mdash; they mostly vary in their
+phases. Therefore, one can easily synthesize a mountain shape by
+generating complex numbers with a specific spectrum profile and
+random phases, followed by an inverse discrete Fourier transform!</p>
+
+<p><div class="points easy">2</div> Using the provided
+<span class="code">ComplexNumber</span> class, write the DFT in the
+<span class="code">FourierTransform::slow_transform</span> function found in
+<span class="code">src/FourierTransform.cpp</span>.</p>
+
+<p><div class="points easy">2</div>In lecture, pseudocode for a
+recursive version of the DFT was presented; this is the FFT, or Fast
+Fourier Transform. Implement the FFT in the
+<span class="code">FourierTransform::fast_transform</span> function,
+found in <span class="code">src/FourierTransform.cpp</span>. This
+function takes the same arguments as the DFT version. Note that for
+the FFT, you can assume that the number of samples is a power of 2.</p>
+
+<p>In order to test your DFT and FFT implementations, we have supplied you with
+a simple visualizer; run <span class="code">make visualizer</span> to compile
+it. The visualizer takes a single command line argument:
+<span class="code">-d</span> to use the DFT or <span class="code">-f</span> to
+use the FFT. The visualizer will read formatted data from
+<span class="code">cin</span>, compute the Fourier transform, then display the
+result. We have supplied you with several sample datasets in the
+<span class="code">data</span> directory. Use a pipe to feed one of these
+datasets into the visualizer:</p>
+
+<div class="code">
+    ./bin/visualizer -d < data/sinewave
+</div>
+
+<p><div class="points hard">2</div>In the file
+<span class="code">src/SpectralSynthesizer.cpp</span>, implement the
+(slightly modified) <span class="code">SpectralSynthesisFM2D</span>
+algorithm, whose pseudocode is below, in
+<span class="code">SpectralSynthesizer::getSpectrum</span>. <b>This
+algorithm is taken from <i>The Science of Fractal Images</i> by Peitgen
+&amp; Saupe; it does not belong to me, CS2, or Caltech.</b> This algorithm
+generates the heights of a fractal surface by storing those heights in a
+two-dimensional array <span class="code">A</span> of size <i>N</i> by
+<i>N</i>. The parameter <span class="code">H</span> controls the fractal
+dimension of the generated surface. You don't need to understand the
+details, but <i>H</i> is a real number in the range 0 &lt; <i>H</i> &lt;
+1 where smaller values of <i>H</i> give surfaces which are more rough
+looking. The functions <span class="code">rand()</span> and
+<span class="code">Gauss()</span> draw from random uniform and normal
+distributions, respectively. We have provided similar functions
+<span class="code">uniform()</span> and
+<span class="code">gaussian()</span> for you.</p>
+
+<div class="hint">We have provided a macro <span class="code">ndx</span>
+that you can use to index a two-dimensional array, so you can write
+<span class="code">A[i][j]</span> from the pseudocode as
+<span class="code">ndx(A, i, j, n)</span>, if <span class="code">A</span>
+is to be interpreted as an <i>n</i>-by-<i>n</i> 2-dimensional array.</div>
+
+<p>You may find it unusual that we are asking you to
+translate code written in another language, rather than synthesize
+your own code, for this objective. It is not uncommon to come across
+an algorithm you would like to implement but are only able to find
+in an "older" language, like FORTRAN in particular. Thus, this is a
+useful skill to learn.</p>
+
+<pre class="prettyprint code">
+SpectralSynthesisFM2D(N, H)
+    BEGIN
+        A := NEW COMPLEX[N][N]
+
+        FOR i = 0 TO N / 2 DO
+            FOR j = 0 to N / 2 DO
+                phase := 2 * 3.14159 * rand()
+
+                IF (i != 0 OR j != 0) THEN
+                    rad := power(i * i + j * j, -(H + 1) / 2) * Gauss()
+                ELSE
+                    rad := 0
+                END IF
+
+                A[i][j] := (rad * cos(phase), rad * sin(phase))
+
+                IF (i = 0) THEN
+                    i0 := 0
+                ELSE
+                    i0 := N - i
+                END IF
+
+                IF (j = 0) THEN
+                    j0 := 0
+                ELSE
+                    j0 := N - j
+                END IF
+
+                A[i0][j0] := (rad * cos(phase), -rad * sin(phase))
+            END FOR
+        END FOR
+
+        A[N / 2][0].imag := 0
+        A[0][N / 2].imag := 0
+        A[N / 2][N / 2].imag := 0
+
+        FOR i = 1 TO N / 2 - 1 DO
+            FOR j = 1 TO N / 2 - 1 DO
+                phase := 2 * 3.14159 * rand()
+                rad := power(i * i + j * j, -(H + 1) / 2) * Gauss()
+                A[i][N - j] := (rad * cos(phase), rad * sin(phase))
+                A[N - i][j] := (rad * cos(phase), -rad * sin(phase))
+            END FOR
+        END FOR
+
+        RETURN A
+    END
+</pre>
+
+<p>You can run the surface visualizer with
+<span class="code">bin/fourier</span>. It can be dragged with the mouse
+or zoomed with Shift + mouse drag. You may also use the arrow keys
+to see the effect of removing Fourier coefficients. The macro at the
+top of <span class="code">src/FourierTransform.hpp</span> determines
+whether the DFT or FFT will be used to compute the surface; feel free
+to test both of your algorithms.</p>
+
+<p>If you're having issues running the graphics package on the virtual
+machine, try adding the line <span class="code">export LIBGL_ALWAYS_SOFTWARE=1</span> to your
+<span class="code">~/.bashrc</span> file, and then running
+<span class="code">source ~/.bashrc</span>.</p>
+
+<p><div class="points hard">3</div>We could use this visualizer and synthesizer
+to make more than mountains. The spectrum of ocean waves can be described by</p>
+
+<center><img src="images/OceanSpectrum.gif" /></center>
+
+<p>where <i>a</i> and <i>b</i> are positive constants, and <i>(f,φ)</i> are the
+polar coordinates of the frequency variables. Can you modify your
+code to generate and visualize a surface that approximates ocean waves? Write
+a new member function that does this in
+<span class="code">SpectralSynthesizer::getOceanSpectrum</span>. As a hint,
+you can re-use much of the code above.</p>
+
+<div class="hint">If you have any questions about this week's assignment,
+please contact cs2tas-2016@caltech.edu, or show up at any TA's office
+hours.</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,208 @@
+GNU gdb (Ubuntu 7.8-1ubuntu4) 7.8.0.20141001-cvs
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i686-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./debugging2...done.
+(gdb) break debugging2.cpp:76
+Breakpoint 1 at 0x80486d7: file debugging2.cpp, line 76.
+(gdb) run
+Starting program: /home/cs2student/Desktop/CS 002/Assignment 1/debugging2 
+
+Breakpoint 1, main (argc=1, argv=0xbffff164) at debugging2.cpp:76
+76	    cout << divide(15625, 37) << endl;  // should print 422
+(gdb) step
+divide (a=15625, b=37) at debugging2.cpp:33
+33	    unsigned int x = 0, y = 0, z = sizeof(a) * 8;
+(gdb) backtrace
+#0  divide (a=15625, b=37) at debugging2.cpp:33
+#1  0x080486e3 in main (argc=1, argv=0xbffff164) at debugging2.cpp:76
+(gdb) print x
+$1 = 7
+(gdb) print y
+$2 = 1
+(gdb) print a
+$3 = 15625
+(gdb) print b
+$4 = 37
+(gdb) print a / b
+$5 = 422
+(gdb) step
+35	    while (z != 0)
+(gdb) print x
+$6 = 0
+(gdb) print y
+$7 = 0
+(gdb) print a
+$8 = 15625
+(gdb) print b
+$9 = 37
+(gdb) step
+39	        y <<= 1;
+(gdb) print y
+$10 = 0
+(gdb) step
+44	            y |= 1;
+(gdb) print a
+$11 = 15625
+(gdb) print a & 0x800000000
+$12 = 0
+(gdb) step
+47	        a <<= 1;
+(gdb) step
+54	        x <<= 1;
+(gdb) run
+The program being debugged has been started already.
+Start it from the beginning? (y or n) 
+Starting program: /home/cs2student/Desktop/CS 002/Assignment 1/debugging2 
+
+Breakpoint 1, main (argc=1, argv=0xbffff164) at debugging2.cpp:76
+76	    cout << divide(15625, 37) << endl;  // should print 422
+(gdb) step
+divide (a=15625, b=37) at debugging2.cpp:33
+33	    unsigned int x = 0, y = 0, z = sizeof(a) * 8;
+(gdb) step
+35	    while (z != 0)
+(gdb) print z
+$13 = 32
+(gdb) step
+39	        y <<= 1;
+(gdb) print y
+$14 = 0
+(gdb) step
+44	            y |= 1;
+(gdb) print y
+$15 = 0
+(gdb) print a
+$16 = 15625
+(gdb) print a & 0x80000000
+$17 = 0
+(gdb) priny [K[K[Knt y
+$18 = 0
+(gdb) step
+47	        a <<= 1;
+(gdb) print y
+$19 = 1
+(gdb) print a
+$20 = 15625
+(gdb) shif[K[K[Ktep
+54	        x <<= 1;
+(gdb) print a
+$21 = 31250
+(gdb) print x
+$22 = 0
+(gdb) step
+57	        if (y > b)
+(gdb) print x
+$23 = 0
+(gdb) print y
+$24 = 1
+(gdb) print b
+$25 = 37
+(gdb) step
+66	        z--;
+(gdb) print z
+$26 = 32
+(gdb) step
+35	    while (z != 0)
+(gdb) print a
+$27 = 31250
+(gdb) step
+39	        y <<= 1;
+(gdb) print y
+$28 = 1
+(gdb) step
+44	            y |= 1;
+(gdb) print y
+$29 = 2
+(gdb) step
+47	        a <<= 1;
+(gdb) print y
+$30 = 3
+(gdb) step
+54	        x <<= 1;
+(gdb) step
+57	        if (y > b)
+(gdb) step
+66	        z--;
+(gdb) step
+35	    while (z != 0)
+(gdb) step
+39	        y <<= 1;
+(gdb) step
+44	            y |= 1;
+(gdb) step
+47	        a <<= 1;
+(gdb) step
+54	        x <<= 1;
+(gdb) step
+57	        if (y > b)
+(gdb) step
+66	        z--;
+(gdb) step
+35	    while (z != 0)
+(gdb) step
+39	        y <<= 1;
+(gdb) step
+44	            y |= 1;
+(gdb) step
+47	        a <<= 1;
+(gdb) step
+54	        x <<= 1;
+(gdb) step
+57	        if (y > b)
+(gdb) step
+66	        z--;
+(gdb) step
+35	    while (z != 0)
+(gdb) step
+39	        y <<= 1;
+(gdb) step
+44	            y |= 1;
+(gdb) step
+47	        a <<= 1;
+(gdb) step
+54	        x <<= 1;
+(gdb) step
+57	        if (y > b)
+(gdb) step
+66	        z--;
+(gdb) step
+35	    while (z != 0)
+(gdb) step
+39	        y <<= 1;
+(gdb) step
+44	            y |= 1;
+(gdb) step
+47	        a <<= 1;
+(gdb) step
+54	        x <<= 1;
+(gdb) step
+57	        if (y > b)
+(gdb) step
+60	            y = b;
+(gdb) step
+62	            x |= 1;
+(gdb) step
+66	        z--;
+(gdb) step
+35	    while (z != 0)
+(gdb) step
+39	        y <<= 1;
+(gdb) step
+44	            y |= 1;
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 2908] will be killed.
+
+Quit anyway? (y or n) 

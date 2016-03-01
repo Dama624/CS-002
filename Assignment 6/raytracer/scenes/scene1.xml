@@ -1,0 +1,19 @@
+<scene>
+    <eye position="(0, 0, 1600)" />
+    <viewport>
+        <topleft position="(-400, 300, 0)" />
+        <topright position="(400, 300, 0)" />
+        <bottomleft position="(-400, -300, 0)" />
+    </viewport>
+    <sphere origin="(-200, 0, -400)" radius="200">
+        <material color="(1.0, 0.0, 0.0)" />
+    </sphere>
+    <sphere origin="(200, 0, -400)" radius="200">
+        <material color="(0.0, 0.5, 1.0)" />
+    </sphere>
+    <sphere origin="(0, 200, -600)" radius="200">
+        <material color="(0.0, 1.0, 0.5)" />
+    </sphere>
+    <light type="point" position="(-400, 400, -400)" intensity="1.0"
+        color="(1.0, 1.0, 1.0)" att0="0.0" att1="0.0" att2="0.0000125" />
+</scene>

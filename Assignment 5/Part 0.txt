@@ -1,0 +1,5 @@
+Part 0: Debugging
+
+Yes, there is an issue with dfs(). The algorithm does not keep track of
+visited nodes. Because of this, if there is a cycle anywhere within the graph,
+the program will run forever.

@@ -1,0 +1,7 @@
+BFS may be faster than DFS in the case where a root spawns an extremely large number of branches. When implementing DFS, if the correct branch is not chosen in the first run, then the algorithm has to backtrack all the way back to the root and start again on a different branch. Meanwhile, BFS crawls through the entire tree and has no need to backtrack.
+
+"Real-life" example for stack usage:
+Undo'ing changes in a Word Document (the last change is the first one in the change history to be removed)
+
+For queue:
+Queuing multiple downloads in a browser (the first download queued is the first one to be done)

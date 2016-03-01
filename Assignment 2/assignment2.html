@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="cs2_assignment.css" rel="stylesheet" type="text/css" />
+<title>CS2 Assignment 2: Sorting and Convex hull</title>
+<script src="google-code-prettify/run_prettify.js"></script>
+</head>
+
+<body>
+<div class="content">
+
+<div class="author">Author: Cody Han</div>
+<h1>CS2 Assignment 2: Sorting and Convex Hull</h1>
+<h2>Due Tuesday, January 19, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Assignment (20 points)</h2>
+
+<p>When you are finished with this assignment, please archive the assignment folder in an archive file named <span class="code">USERNAME-cs2-week2.tar.gz</span> or <span class="code">USERNAME-cs2-week2.zip</span>, and upload it to Moodle. For this week's assignment, you will need some graphics libraries that the convex hull GUI program uses to render its graphics.</p>
+
+<h2>Prerequisites</h2>
+
+<p> If you are working with the virtual machine that we provided, the dependencies are already installed. </p>
+
+<p><ul>
+  <li>g++ 4.6.x+</li>
+  <li>valgrind</li>
+  <li>libsdl1.2-dev</li>
+  <li>libsdl-gfx1.2-dev</li>
+</ul>
+
+<p> On an Ubuntu distribution, to install these packages, you should run the following commands in a terminal. </p>
+
+<pre class="code">
+$ sudo apt-get install valgrind
+$ sudo apt-get install libsdl1.2-dev
+$ sudo apt-get install libsdl-gfx1.2-dev
+</pre>
+
+<p> Ask a TA if you need help retrieving these packages, or if these packages
+appear to be missing from the CS cluster. Detailed instructions will soon be posted for students using VirtualBox or Ubuntu.</p>
+
+<p> For those students using Arch Linux or a derivation thereof (that uses pacman as the system's package manager), you can install the necessary dependenies as follows: </p>
+
+<pre class="code">
+$ sudo pacman -S sdl
+$ sudo pacman -S sdl_gfx
+</pre>
+
+<h3>Part 1: Memory Leaks, and why they are bad for you.</h3>
+
+<h4>New Tools: valgrind</h4>
+
+<p> Recall the concept of dynamic memory allocation from last week. We mentioned that the programmer must manually manage heap memory, where dynamically allocated memory resides. This week we will explore what happens if a programmer is not careful about managing the memory he or she allocates. </p>
+
+<p> Valgrind is a program used for memory debugging and memory leak detection that runs your program and keeps track of its memory usage. Your program runs normally within Valgrind, and when it returns, Valgrind prints out a useful report of the heap memory usage of your program. </p>
+
+<p> Take a look at the file <span class="code">linked_list.cpp</span>. This file implements the shell of a linked list data structure. Compile it with the command <span class="code">make list</span>. Now run the program in Valgrind with the command <span class="code">valgrind ./linked_list</span>. Notice the memory leaks. </p>
+
+<p><div class="points easy">1</div>Why is the program leaking memory? How could this be a problem? Answer these questions in a comment block at the top of <span class="code">linked_list.cpp</span>. </p>
+
+<p><div class="points easy">1</div>Fix the problem and verify that your fix works. Include the corrected version of <span class="code">linked_list.cpp</span> in your submission.</p>
+
+
+<h3>Part 2: Sorting</h3>
+
+<h4>New Concepts: argc/argv, File Input, C++ Standard Template Library</h4>
+
+<p> One of the most useful ways to use a program is to pass it input and receive some output. For example, if I have a program that determines whether a number is prime that gets its input from the user via <span class="code">scanf</span> or <span class="code">cin</span>, and I want to count the number of prime numbers in a file, I don't want to enter each number in the file by hand and keep track of the number of primes I have by myself. Wouldn't it be nice if I could pass the contents of my file to my program?
+</p>
+
+<p> Here's where <span class="code">argc</span> and <span class="code">argv</span> come in. Check out the demo file <span class="code">argcv.cpp</span>. Compile it and run it:
+
+<pre class="code">
+$ g++ argcv.cpp -o argcv
+./argcv foo bar baz
+</pre>
+
+<p> What was the output? You should notice that <span class="code">argc</span> is the number of arguments in the command line invocation of our program and <span class="code">argv</span> is an array of strings; precisely the strings in our invocation. Notice that the <span class="emph">program name</span> itself is the always the <span class="emph">first argument</span> in <span class="code">argv</span>. </p>
+
+<p> Now let's do a simple file input exercise using what we just learned. We will write a program that takes a filename as its command line argument and prints the contents of that file to <span class="code">stdout</span>, in the process learning about the vector container implemented in the C++ Standard Template Library, which we will refer to as <span class="keyword">STL</span> from here on out. </p>
+
+<p> The STL is a collection of container classes and algorithms that provides many of the basic data structures and algorithms commonly used in programs. We will be using it more later in the term; this week we will concern ourselves only with the vector container from STL. The vector container is documented in detail <a href="http://www.cplusplus.com/reference/vector/vector/">here</a>; for this week's purposes, it is a more convenient form of an array. Notice that vector, like most STL container classes, uses templates. This means that a vector can contain any type of primitive or object, unlike conventional C arrays. The link above provides many examples of vector usage; if you get stuck or confused about how vectors work, take a look at the examples provided in the documentation. </p>
+
+<p> Here is an example that may be particularly useful this week: </p>
+
+<pre class="prettyprint code">
+// Fill vector with numbers
+vector&lt;int&gt; nums;
+for (int i = 0; i < 10; i++)
+{
+  nums.push_back(i);
+}
+
+// Print out the contents of nums with an iterator
+for (std::vector&lt;int&gt;::iterator i = nums.start(); i != nums.end(); ++i)
+{
+  std::cout << (*i) << std::endl;
+}
+
+// Print out the contents of nums treating it like an array
+for (int i = 0; i < nums.size(); i++)
+{
+  std::cout << nums[i] << std::endl;
+}
+</pre>
+
+<p> <div class="points easy">1</div> Now, take a look at the file <span class="code">fileio.cpp</span>. Write the <span class="code">readFile</span> function, which takes a filename and vector of integers as an argument and fills the vector with integers from the specified file. Refer to <a href="http://www.cplusplus.com/doc/tutorial/files/">this</a> tutorial on file I/O for examples. Once you've finished this, verify that your function works by writing the <span class="code">print_vector</span> function in <span class="code">fileio.h</span> and writing test code in <span class="code">testFileIO.cpp</span> which instantiates a vector, calls the <span class="code">readFile</span> and <span class="code">print_vector</span> functions to demonstrate that the file was read successfully. Your output should look like: </p>
+
+<pre class="code">
+$ make fileio
+$ ./testFileIO nums
+1
+2
+3
+4
+9001
+42
+24
+</pre>
+
+<p> We will use what we've learned so far to write a program that takes a file input and an optional command line argument specifying which type of sort we want to use. The program will then sort the numbers in the input file and print out its result. The command line parsing has been done for you so you can focus on writing the sorting algorithms. You <span class="emph">must</span> have a working <span class="code">readFile</span> function before the program in the next part will work. </p>
+
+<h4>New Concepts: The Bubble Sort, Quicksort, and Merge Sort Algorithms</h4>
+
+<p> In lecture this week we covered the <span class="keyword">bubble sort</span> algorithm. Before we implement it in code, it is important to know <span class="emph">precisely</span> what it is we're doing. We will outline the bubble sort algorithm in step-wise English before writing a single line of code. You may find it useful to pass arguments by reference in a helper function that swaps two elements of a vector/array. Take a look at <a href="http://www.learncpp.com/cpp-tutorial/73-passing-arguments-by-reference/">this</a> tutorial on passing arguments by reference for an explanation and examples of this. </p>
+
+<p> Here is an example of outlining an algorithm for finding an element in an array using the binary search algorithm. Notice that the function for computing the midpoint is not explicitly written out, as its implementation is fairly trivial. You may want to consider doing this for a function that swaps data elements in your sorting algorithms. </p>
+
+<pre class="prettyprint code">
+/**
+ * @file search.cpp
+ * @author The CS2 TA Team &lt;cs2tas-2016@caltech.edu&gt;
+ * @date 2016
+ * @copyright This code is in the public domain.
+ *
+ * @brief An example of code outlining, using the binary search algorithm.
+ */
+
+/**
+ * The range [low, high] are the indices where we expect to find value in the
+ * array. The function returns the index of value if it is found in array, and
+ * NOT_FOUND if value is not in the specified range in array. If multiple copies
+ * of value are in array, the function returns the index of an arbitrary one.
+ *
+ * IF low > high THEN
+ *  RETURN NOT_FOUND
+ * ELSE
+ *  mid = midpoint(low, high)
+ *  IF array[mid] > value THEN
+ *      return binarySearch(array, value, low, mid - 1)
+ *  ELSE IF array[mid] < value THEN
+ *      return binarySearch(array, value, mid + 1, high)
+ *  ELSE
+ *      return mid
+ *  ENDIF
+ * ENDIF
+ *
+ */
+ int binarySearch(int array[], int value, int low, int high)
+ {
+ // code goes here...
+ }
+
+</pre>
+
+<p><div class="points easy">1</div> Outline your bubble sort function in a comment block above the bubble sort function in <span class="code">sorter.cpp</span>. </p>
+
+<p><div class="points easy">1</div> Do the same outlining procedure in comment blocks above the <span class="keyword">quicksort</span> and <span class="keyword">merge sort</span> functions in <span class="code">sorter.cpp</span>. Outline the non-in-place version of the quicksort algorithm for now. </p>
+
+<p><div class="points easy">2</div> Now implement the above sorting algorithms in their respective functions. Make sure you're returning the correct type from each function! </p>
+
+<p> The quicksort algorithm we've implemented is good, but not ideal. It constructs extra lists every function call. On large input, this can cost a lot of memory overhead. We can retain the nlog(n) time compexity of the quicksort algorithm and reduce its space complexity to O(1) by implementing it in-place. </p>
+
+<p> An idea for implementing the quicksort algorithm in place is to keep track of the segment of the list we are sorting with its leftmost and rightmost indices. We may select a pivot in the list and partition the list around this pivot using a helper function. This helper function should put all elements smaller than the pivot element on its left and all elements larger than the pivot on its right. It may be useful to return the index that the pivot point ends up at from your helper function. </p>
+
+<p> <div class="points easy">2</div> Outline and implement the in-place quicksort algorithm.</p>
+
+<p> Once you've finished implementing any subset of the above algorithms (or even before), you can compile your program and test it. Specify the type of sort you want to use with a command line option as documented in the usage statement that sorter prints out if you try to run it alone. </p>
+
+<pre class="code">
+$ make sorter
+$ ./sorter
+Usage: sorter [-b] [-m] [-q] [-qi] FILE
+    Sorts a file that contains integers delimited by newlines and prints the result to stdout.
+    -b      bubble sort
+    -m      merge sort
+    -q      quick sort
+    -qi     in-place quick sort
+    No option defaults to bubble sort.
+$ ./sorter -q nums
+1
+2
+3
+4
+24
+42
+9001
+</pre>
+
+<p> We've also included some test files for you to test your sorter program on. These are labeled <span class="code">testsort</span> followed by a number. Feel free to make your own test files and include them with your submission to demonstrate your program's robustness. </p>
+
+<h3>Part 3: Convex Hull Algorithms</h3>
+
+<h4> New Concepts: Arrays of Pointers </h4>
+
+<p> In the sorting algorithms, we dealt with vectors that held integer primitives. The STL vector implementation is done with templates, which allows vectors to hold virtually any type of data. We can use this to store objects and structs within vectors. This week, we will work with vectors that hold pointers to structs in order to practice using pointers. </p>
+
+<p> Take a look at the <span class="code">angleSort.cpp</span> file. You'll see that its main method initializes two vectors, one that contains doubles and the other that contains pointers to tuples. For this exercise we will pretend that the doubles represent the angles each point makes relative to the x axis. That is, the angle formed by the positive x axis and the line joining the point to the origin. </p>
+
+<p> <div class="points easy">1</div> Modify your in-place quicksorting algorithm to sort the points with respect to the "angles" they make with the positive x axis. One way to do this is simply to sort the angles and pass the points along for the ride, and swap elements in both the points and angles vectors in your helper function that swaps two elements of a vector/array. Keep in mind that you should pass arguments by reference if you want to modify them in a function. When you compile and run the program, you should expect the following result: </p>
+
+<pre class="code">
+$ g++ -std=c++0x angleSort.cpp -o angleSort
+$ ./angleSort
+(0, 0)
+(1, 1)
+(2, 2)
+(3, 3)
+(4, 4)
+4.2
+2.8
+1.4
+5
+3.3
+(2, 2)
+(1, 1)
+(4, 4)
+(0, 0)
+(3, 3)
+1.4
+2.8
+3.3
+4.2
+5
+</pre>
+
+<p> Congratulations, you've just written part of the code for the Graham scan algorithm, which we will implement later. </p>
+
+<h4> New Concepts: Gift Wrapping Algorithm </h4>
+
+<p> We've provided a GUI for you to visualize the convex hull algorithms you'll be implementing this week. The only file you have to edit is <span class="code">HullAlgorithms.cpp</span>. The functions you'll have to implement this week are <span class="code">DoGiftWrap</span> and <span class="code">DoGrahamScan</span>, both of which take two arguments. The first is a vector of pointers to tuples, which you worked with while sorting angles, and the second is a pointer to the convex hull application. The function from the application you'll be concerned with is <span class="code">add_to_hull</span>, which is called with a pointer to a tuple as an argument. An example of adding a point to the hull: </p>
+
+<pre class="prettyprint code">
+app->add_to_hull(new Tuple(1, 1));
+// The -> symbol used above is syntactic sugar for a pointer dereference. The
+// same result is achieved with:
+(*app).add_to_hull(new Tuple(1, 1));
+</pre>
+
+<p> The gift wrapping algorithm is an output sensitive convex hull algorithm, meaning its runtime depends on how many points are in the convex hull as well as how many points are in the data set to begin with. The general idea is: </p>
+
+<ul><li> Find a point known to be on the convex hull, for instance, the leftmost point in the data set. </li>
+<li> Add this point to the convex hull, then find the point such that no points lie on the right of the line connecting our first point and this point. Either do some vector arithmetic to figure out whether a third point lies on the right of a line determined by two points or look up how to do this online. You will want to use a loop in this step, probably looping all of the points in the data set. </li>
+<li> Use the point we just found as our new starting point and loop doing the above procedure until we wrap all the way back around to where we started. </li></ul>
+
+<p><div class="points easy">3</div> Outline (the level of detail in your outline is up to you) and implement the function <span class="code">DoGiftWrap</span>. You can compile the application with <span class="code">make convexhull</span> and run it with <span class="code">./ConvexHullApp</span>. When you run it, you should see a screen appear with red dots scattered about. Type <span class="code">w</span> with the application screen focused to run the gift wrapping algorithm, and <span class="code">q</span> to quit the program. </p>
+
+<p> A helper function to determine whether three points make a left turn is very useful for this assignment! This function can be used in both the gift wrapping and Graham scan algorithms. The reference implementation for gift wrapping contains only 17 lines of code, not including comments and helper functions. One helper function determines whether three points make a left turn and the other returns the leftmost point in the data set. Both of these are fairly easy to implement and make the gift wrapping function much more readable. </p>
+
+<p> You should also note that the screen is oriented such that the positive y axis goes from the top towards the bottom of the screen. This means that any three points that would constitute a left turn in our normal, Cartesian coordinate system actually constitute a right turn in our GUI window. Don't fear! There is an easy way to account for this. You can implement the function that determines whether three points make a left turn in such a way that it respects the GUI's coordinate system, and implement the gift wrapping algorithm as if your points were in a Cartesian coordinate system. </p>
+
+<h4> New Concepts: Graham Scan Algorithm </h4>
+
+<p> The Graham scan algorithm is a convex hull algorithm that runs in nlog(n) time where n is the number of vertices in the data set. This algorithm is preferable to the gift wrapping algorithm whenever you expect the convex hull to contain more vertices than log(n) [almost always]. Here is a brief overview of how it works (think in Cartesian coordinates): </p>
+
+<ul><li> Find the lowest point in the set of points. Designate this point P. We know that P will be in the convex hull. </li>
+<li> Sort the points either with respect to the angle formed by the origin, P, and each point, or with respect to the angle formed by the horizontal line crossing P and the line joining P and each point. We now know three points on the convex hull: P, at the front of the sorted array, the point after it, and the last point in the array. </li>
+<li> Now consider points in the sorted array in sequence. Specifically, keep track of points that are on the hull in sorted order. Add the next point to the convex hull and make sure that the last three points on our hull make a left turn.
+<li> Continue until we get back to our starting point.
+<p align="center">
+  <a href="http://en.wikipedia.org/wiki/Graham_scan#mediaviewer/File:Graham_Scan.svg">
+    <img align="center" src="Graham_Scan.svg" alt="Graham Scan" />
+  </a><br>
+  We see our first right turn in step 2. This indicates that C cannot be on the convex hull. We drop the second of the last three points in the convex hull until the last three points make a left turn.
+</p>
+</ul>
+
+<p> <div class="points easy">2</div> Outline (again, level of detail is up to you) and implement the function <span class="code">DoGrahamScan</span>. Compile and launch the program the same way as you did with gift wrapping. You can invoke the Graham scan algorithm by pressing <span class="code">s</span> with the GUI window focused. You may find it useful to reuse the left turn checking function from gift wrapping, keeping in mind that if you wrote it with respect to the GUI coordinate system you will need to interpret the "left" turns as right turns (if you calculate the angles in Cartesian). A function <span class="code">angle_wrt_pt</span> has been provided to you in <span class="code">structs.h</span> that does some useful computation for you in Cartesian coordinates. You may choose to use it, modify it, or ignore it as you wish. </p>
+
+<p> Our reference implementation uses about 13 lines to compute the hull, not including comments or helper functions. You should find helper functions to sort the points with respect to a single point (refer to the second bullet point above) and to check for three points making a left turn to be very useful. The code you wrote in <span class="code">angleSort.cpp</span> should be reused here as well, perhaps encapsulated in your function that sorts the points with respect to P. Our implementation uses the modified in-place quicksort for <span class="code">angleSort</span> and there is no difference between the sorting code in <span class="code">angleSort.cpp</span> and <span class="code">HullAlgorithms.cpp</span>. </p>
+<hr />
+
+<h3> Part 4: Further work </h3>
+
+<p><span class="emph">These are more time-consuming exercises. Complete them only if you have time.</span></p>
+
+<p> This week's extra points exercise involves an algorithm from the early days of computer graphics. When you choose two points on a screen and ask any modern graphics library to draw a line between them, it does so. How does it do this? </p>
+
+<h4> New Concepts: Bresenham's Line Algorithm </h4>
+
+<p> Here is a more precise specification of the problem. </p>
+
+<p> Let two points P and Q with integer coordinates be given. Call a sequence of points an integer path between P and Q if every point in this sequence has integer coordinates and each point is adjacent to the next. Two points (x, y) and (a, b) are said to be adjacent if and only if |x - a| and |y - b| do not exceed one. </p>
+
+<p> Produce the shortest length integer path from P to Q, where the length is defined to be the sum of the distances of adjacent points in the sequence. The distance between points is the usual <a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a> in the plane. </p>
+
+<p> One idea is to use Bresenham's line algorithm, which you can look up on Wikipedia or other sources. Do not plagiarize code. </p>
+
+<p> We've provided you with a GUI application similar to the convex hull app that handles the visualization component of the line algorithm. Click on the screen to place points on it, and press <span class="code">l</span> to invoke your line algorithm on the last two points you entered. You can also press <span class="code">c</span> to clear the screen of all points and lines. </p>
+
+<p> <div class="points hard">5</div> Implement Bresenham's line algorithm or a line algorithm of your choice. The only function you have to write is the <span class="code">line</span> algorithm in <span class="code">LineAlgorithm.cpp</span>. Partial credit will be given if at least some cases work. </p>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="cs2_assignment.css" rel="stylesheet" type="text/css" />
+<title>CS2 Assignment 3: Data Structures</title>
+</head>
+
+<body>
+<script src="google-code-prettify/run_prettify.js"></script>
+<div class="content">
+
+<div class="author">Author: Ellen Price<br>Edited in 2016 by Tim Menninger</div>
+<h1>CS2 Assignment 3: Data Structures</h1>
+<h2>Due Tuesday, January 26, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on data structures. In particular, you
+will be handling binary search trees, queues, stacks, and quadtrees.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named
+<span class="code">[NAME]-cs2week3.zip</span> or a tar.gz file named
+<span class="code">[NAME]-cs2week3.tar.gz</span>, and upload it to the
+Week 3 assignment module on Moodle.</p>
+
+<h2>Assignment Background</h2>
+
+<p>Data structures are ubiquitous in computer science, but not every data
+structure is appropriate for every situation. Some common data structures
+include queues, stacks, lists, sets, trees, etc. Tasks you might complete
+using an appropriate data structure include organizing information, searching
+information quickly, and sorting information. In this assignment, you will
+be asked to use several data structures: binary search trees, stacks,
+queues, and quadtrees.</p>
+
+<h3>Maze solving with stacks and queues</h3>
+
+<p>A <span class="keyword">stack</span> is a LIFO (last in, first out) data
+structure that stores an ordered list of items. We commonly use two terms
+to refer to how items are added to and removed from a stack:
+<span class="keyword">push</span> and <span class="keyword">pop</span>.
+When you push an item on a stack, you add it to the "top;" when you pop
+an item off the stack, you remove it from the "top." Hopefully, you can
+understand why this makes it a LIFO structure: the item that was just
+pushed will be the first one to be popped.</p>
+
+<p>In contrast, a <span class="keyword">queue</span> is a FIFO (first in,
+first out) data structure that stores an ordered list of items. When you
+remove an item from a queue, you <span class="keyword">dequeue</span> it,
+whereas, when you add an item to a queue, you <span class="keyword">enqueue</span>
+it. When items are enqueued, they are added to the "bottom" of the queue;
+when they are dequeued, they are removed from the "top."</p>
+
+<p>Though data structures are not generally interchangable, this
+assignment will ask you to solve the same problem using two different
+methods (and, therefore, two different data structures). Before you can
+understand the search algorithms, you need some background on graphs.
+<span class="hilite">Keep in mind that you will not be asked to implement
+graphs in this assignment; you will complete an entire assignment on
+graphs later in the term.</span> A graph, in short, is a set of
+<span class="keyword">nodes</span> that are connected by
+<span class="keyword">edges</span>, and each node contains some value.
+Unlike trees, values in graphs <i>can</i> be repeated, and edges are two-way.
+For this assignment, the graph will be a maze, where each node is an
+open space, and its value will tell you which adjacent spaces are
+accessible to it.</p>
+
+<p>You will implement a depth-first search algorithm and a breadth-first
+search algorithm. The processes involved in these two algorithms are
+suggested by their names. A <span class="keyword">depth-first search</span>
+searches a tree or graph by exploring a single branch as far as it can,
+then backtracking to the last node with unvisited neighbors and repeating
+the process. On the other hand, a <span class="keyword">breadth-first
+search</span> searches a tree or graph by examining all the unvisited
+neighbors of the current node; then, it examines all of <i>their</i>
+neighbors, etc.</p>
+
+<p>You might find it helpful to read the Wikipedia articles about
+<a href="http://en.wikipedia.org/wiki/Stack_(data_structure)">stacks</a>
+and <a href="http://en.wikipedia.org/wiki/Queue_(data_structure)">queues</a>;
+in particular, the animations may be helpful. You may also read
+the articles on the
+<a href="http://en.wikipedia.org/wiki/Depth-first_search">depth-first</a>
+and <a href="http://en.wikipedia.org/wiki/Breadth-first_search">breadth-first</a>
+search algorithms before you attempt to implement them. Remember that
+<i>all code you submit must be your own!</i>.</p>
+
+<h3>Spatial data organization with quadtrees</h3>
+
+<p>The quadtree is a data structure that allows us to store spatial
+(two-dimensional) data in a convenient way. They are similar to
+binary search trees, but each node of a quadtree contains up to <b>four</b>
+children; a node can contain fewer than that. For our purposes, a
+node can contain at most one point. If another point is inserted into
+the tree and falls inside a node that already has a point, the tree
+recursively divides that node into four children until no child
+contains more than one point. Examine the figure below (credit:
+Wikipedia) to be sure you understand this concept.</p>
+
+<center>
+<img src="images/quadtree.png" />
+</center>
+
+<p>You can clearly see that each region contains up to four children,
+but many of them have three or two. This prevents us from needlessly
+recursing and keeping up with regions where there are no points:
+High-density areas will have more subdivided regions, and low-density
+areas will have less.</p>
+
+<h2>Prerequisites</h2>
+
+<p><ul>
+	<li>g++ 4.6.x+</li>
+	<li>libsdl1.2-dev</li>
+	<li>libsdl-gfx1.2-dev</li>
+</ul>
+
+Ask a TA if you need help retrieving these packages, or if these packages
+appear to be missing from the CS cluster.</p>
+
+<h2>Assignment (20 points)</h2>
+
+<div class="attention">At no point in this assignment should you use a
+pre-built stack or queue class (such as those in STL); the whole point
+of this assignment is that you learn how to implement these data
+structures for yourself. If you are unsure if a resource is allowed, ask
+a TA. In general, <span class="code">stdlib.h</span> and
+<span class="code">stdio.h</span> should provide all the outside
+functionality you will need.</div>
+
+<p></p>
+
+<div class="hint">Write all of your source code in the provided files,
+leaving the file structure intact. Your submission should be your base
+directory, zipped, with all source files included. You do not need to
+include binaries or object files. To quickly remove binaries and object
+files, run <span class="code">make clean</span> using the supplied
+Makefile target. As always, be sure that the code you submit compiles!</div>
+
+<h3>Part 0: Debugging with binary search trees</h3>
+
+<p>This objective is to be completed inside the
+<span class="code">bst</span> subdirectory. In the file
+<span class="code">bst.cpp</span> there is a simple implementation
+of a <span class="keyword">binary search tree</span>, a data structure that
+facilitates searching for comparable items (integers in our case) in
+<span class="code">O(log n)</span> time. Searching through linked lists is
+inefficient because <span class="code">O(n)</span> nodes must be visited
+on average; binary trees avoid the linear dependency by facilitating binary
+search (where each decision eliminates half of the potential sample space).</p>
+
+<p>When you run <span class="code">make bst</span>, you'll notice that this file
+compiles to a binary called <span class="code">bst</span>. Running this binary
+runs a quick test of the data structure, verifying that you can add numbers
+successfully and then find them successfully in the data structure.</p>
+
+<p><div class="points easy">2</div> The current implementation is defective.
+Identify why and fix it. Hint: there is at least one segmentation fault
+and at least one memory leak.</p>
+
+<h3>Part 1: Maze solving</h3>
+
+<p>For this part, you will write two algorithms that will solve
+a simple, randomly-generated maze. You will be implementing certain
+functions from the classes described in the next few sections; you
+should open them now and follow along with their descriptions so that
+you understand the structure of this code. All source files are located
+in <span class="code">maze/src</span>.</p>
+
+<p>You have been provided a <span class="code">Coordinate</span> class
+in <span class="code">maze/src/common.hpp</span>, a simple wrapper around
+two integers representing zero-based maze coordinates. We have given you
+two constructors and an assignment operator for this class to make it
+easier to pass-by-value and return-by-value. It is worth your time to
+study the provided code before you start!</p>
+
+<h4>Part 1.1: CoordinateStack class</h4>
+
+<p>The <span class="code">CoordinateStack</span> is a LIFO stack
+that stores <span class="code">stackitem</span> structures, which
+contain a <span class="code">Coordinate</span> object and a reference
+to the next item in the stack. If you are already familiar with linked
+lists, this design should not surprise you.</p>
+
+<p><div class="points easy">2</div>This objective is to be completed
+in <span class="code">maze/src/CoordinateStack.{cpp,hpp}</span>. You are
+responsible for the following functions inside the
+<span class="code">CoordinateStack</span> class. This class contains a
+private pointer to the "top" stack item, <span class="code">top</span>,
+since every <span class="code">stackitem</span> structure contains a
+reference to the next item.</p>
+
+<p><ul>
+	<li><b><span class="code">init</span>:</b> This function should do
+		any initialization you need for your implementation and should
+		return nothing.</li>
+	<li><b><span class="code">deinit</span>:</b> This function should
+		free any memory associated with stack items; we don't
+		want any memory leaks!</li>
+	<li><b><span class="code">do_push</span>:</b> This function takes
+		a <span class="code">Coordinate</span> and pushes it onto the
+        stack.</li>
+	<li><b><span class="code">do_pop</span>:</b> This function takes
+        no arguments; it should remove the top
+        <span class="code">Coordinate</span> from the stack and return
+        it.</li>
+	<li><b><span class="code">peek</span>:</b> This function takes no
+        arguments and returns the top <span class="code">Coordinate</span>
+		<i>without removing it</i>.</li>
+	<li><b><span class="code">is_empty</span>:</b> This function takes
+		no arguments; it returns <span class="code">true</span> if
+		the stack has no items, <span class="code">false</span>
+		otherwise.</li>
+</ul></p>
+
+<p><div class="points easy">1</div>Write a simple test sequence in
+<span class="code">maze/src/testsuite.cpp</span> to demonstrate that
+you can successfully push and pop <span class="code">Coordinate</span>
+objects onto your stack. You should also demonstrate that you can
+attempt to pop an item off an empty stack without causing a
+segmentation fault, etc. Compile with
+<span class="code">make testsuite</span>, and run with
+<span class="code">bin/testsuite</span>.
+Make sure in addition to printing values from your test, you print
+brief descriptions of each value! Printing <span class="code">1 2</span>
+is very hard to understand and is thus meaningless. Instead, print
+something descriptive so the user can easily see whether the test
+was passed.  For example, print
+<span class="code">Popping Coordinate (1, 2). Popped value: 1 2</span>, where
+the "(1, 2)" reports what you expect and the "popped value"
+is what was actually popped.</p>
+
+<div class="hint">Do not attempt to solve the maze with depth-first
+search until you are sure your stack implementation works the way
+you expect!</div>
+
+<h4>1.2 Coordinate queue class</h4>
+
+<p>The <span class="code">CoordinateQueue</span> is a FIFO queue that
+stores <span class="code">queueitem</span> structures, which are
+similar to <span class="code">stackitem</span>.</p>
+
+<p><div class="points easy">2</div>This objective is to be completed
+in <span class="code">maze/src/CoordinateQueue.{cpp,hpp}</span>. You are
+responsible for the following functions inside the
+<span class="code">CoordinateQueue</span> class. This class contains a
+private pointer to the "front" and "rear" stack item,
+<span class="code">front</span> and <span class="code">rear</span>, so
+that items can be added to the back of the queue and taken from the
+front of the queue.</p>
+
+<p><ul>
+	<li><b><span class="code">init</span>:</b> This function should do
+		any initialization you need for your implementation and should
+		return nothing.</li>
+	<li><b><span class="code">deinit</span>:</b> This function should
+		free any memory associated with queue items.</li>
+	<li><b><span class="code">do_enqueue</span>:</b> This function takes
+		a <span class="code">Coordinate</span> object and enqueues
+		it at the end of the queue.</li>
+	<li><b><span class="code">do_dequeue</span>:</b> This function takes
+        no arguments; it should remove the front
+        <span class="code">Coordinate</span> from the queue
+		and return it.</li>
+	<li><b><span class="code">peek</span>:</b> This function takes no
+        arguments and returns the front <span class="code">Coordinate</span>
+        in the queue <i>without removing it</i>.</li>
+	<li><b><span class="code">is_empty</span>:</b> This function takes
+		no arguments; it returns <span class="code">true</span> if
+		the queue has no items, <span class="code">false</span>
+		otherwise.</li>
+</ul></p>
+
+<p><div class="points easy">1</div>Continue your test sequence in
+<span class="code">maze/src/testsuite.cpp</span> to demonstrate that
+you can successfully enqueue and dequeue <span class="code">Coordinate</span>
+objects into your queue. You should also demonstrate that you can
+attempt to dequeue an item from an empty queue without causing a
+segmentation fault, etc. Compile with
+<span class="code">make testsuite</span>, and run with
+<span class="code">bin/testsuite</span>.</p>
+
+<div class="hint">Do not attempt to solve the maze with breadth-first
+search until you are sure your queue implementation works the way
+you expect!</div>
+
+<h4>1.3 Depth-first search algorithm</h4>
+
+<div class="quote">Compile the maze application with
+<span class="code">make maze</span>, and run with
+<span class="code">bin/maze</span>. Pressing 'b' will perform a
+breadth-first search, and pressing 'd' will perform a depth-first
+search; pressing 'r' resets the maze and 'q' quits.</div>
+
+<p>The <span class="code">DepthFirstSolver</span> is a class that searches
+a <span class="code">MazeGrid</span>, an array representation
+of the maze, with a depth-first search. You will interact with the
+<span class="code">MazeGrid</span> via its provided functions
+and will not need to worry about writing it.</p>
+
+<p>Now, you will use the <span class="code">CoordinateStack</span> class
+to do something useful: solve a maze. The maze is rectangular, of
+height <span class="code">HEIGHT</span> and width
+<span class="code">WIDTH</span> (constants defined in the provided
+code). All mazes begin at the coordinate position
+<span class="code">(MAZE_START_X, MAZE_START_Y)</span> and end at coordinate
+position <span class="code">(MAZE_END_X, MAZE_END_Y)</span>.
+<span class="emph">All mazes have a solution.</span> Some general
+pseudocode for the depth-first search algorithm is given below.</p>
+
+<pre>
+Push the first coordinate
+
+while stack is not empty:
+    Mark the current position as visited
+
+    if current position is end coordinate:
+        Stop the search
+    else:
+        Push the next available move onto the stack
+</pre>
+
+<p><div class="points easy">2</div>This objective is to be completed
+in <span class="code">maze/src/DepthFirstSolver.{cpp,hpp}</span>.
+Implement the functions <span class="code">init</span>,
+<span class="code">deinit</span>, and <span class="code">solve</span>.
+<span class="code">solve</span>, which actually solves the maze, takes
+a <span class="code">MazeGrid</span> object as its only argument. The
+only thing you should do with the <span class="code">MazeGrid</span> is
+call its <span class="code">get_possible_moves</span> function, which
+takes integers <i>x</i> and <i>y</i> representing a valid position and
+returns an integer that is some bitwise OR-d combination of four constants:
+<span class="code">N</span>, <span class="code">S</span>,
+<span class="code">E</span>, and <span class="code">W</span> (representing
+the directions north, south, east, and west, respectively). Below is
+an example of testing if east is a valid move from the position (1, 2).</p>
+
+<pre class="prettyprint code">
+res = grid->get_possible_moves(1, 2);
+
+if (res & E)
+{
+	/* We can move east from (1, 2). */
+	do_something();
+}
+else
+{
+	/* We cannot move east from (1, 2). */
+	do_something_else();
+}
+</pre>
+
+<p>The skeleton class you are given includes a private member
+<span class="code">stack</span>, a pre-initialized
+<span class="code">CoordinateStack</span> object; you should use this
+stack instead of allocating your own. In addition, you are provided the
+member <span class="code">visited</span>, an array of boolean values to
+help you keep up with which squares you have already visited.
+You are free to modify, remove, and add variables to your class.</p>
+
+<p>You are perfectly welcome to break up your solving function into
+smaller pieces by writing helper functions; this should also make
+debugging your code easier. You may or may not use all of the functions
+you implemented in your <span class="code">CoordinateStack</span> class,
+but remember that all of them are available to you.</p>
+
+<p><div class="points easy">1</div>To be able to visualize your maze-solving
+procedure, you must also implement the member function
+<span class="code">get_path</span>, which returns the current path through
+the maze. The renderer will call this function after push and pop operations
+to update the display and show you the current state. You may want to add
+another function to the stack class to help you; remember that, for DFS,
+the entire path is contained on the stack. Your implementation of this
+function should not call or rely on <span class="code">push()</span> or
+<span class="code">pop()</span> functions.</p>
+
+<h4>1.4 Breadth-first search algorithm</h4>
+
+<div class="quote">Compile the maze application with
+<span class="code">make maze</span>, and run with
+<span class="code">bin/maze</span>. Pressing 'b' will perform a
+breadth-first search, and pressing 'd' will perform a depth-first
+search; pressing 'r' resets the maze and 'q' quits.</div>
+
+<p>The <span class="code">BreadthFirstSolver</span> is a class that
+searches a <span class="code">MazeGrid</span> with a
+breadth-first search. You will interact with the
+<span class="code">MazeGrid</span> via its provided functions
+and will not need to worry about writing it.</p>
+
+<p>The parameters of the maze are the same for the
+<span class="code">BreadthFirstSolver</span> class. Some general
+pseudocode for the breadth-first search algorithm is given below. You
+should take note of the similarities and differences between the two
+algorithms and their corresponding data structures.</p>
+
+<pre>
+Enqueue the first coordinate
+
+while queue is not empty:
+    Mark the current position as visited
+
+    if current position is end coordinate:
+        Stop the search
+    else:
+        Enqueue all available moves
+</pre>
+
+<p><div class="points easy">2</div>This objective is to be completed
+in <span class="code">maze/src/BreadthFirstSolver.{cpp,hpp}</span>. Again,
+implement the functions <span class="code">init</span>,
+<span class="code">deinit</span>, and <span class="code">solve</span>.
+This function takes the same arguments as that in the
+<span class="code">DepthFirstSolver</span> class, a pointer to a
+<span class="code">MazeGrid</span> object representing the maze to be
+solved, and you can test for available moves in the same way that was
+demonstrated above.</p>
+
+<p>As before, the skeleton class you are given includes a private member
+<span class="code">queue</span>, a pre-initialized
+<span class="code">CoordinateQueue</span> object; you should use this
+queue instead of allocating your own. You are again provided the
+member array <span class="code">visited</span>, but with some extra
+sugar. Unlike DFS, the path through the maze found via BFS is not
+contained in the queue, so you not only need to keep up with which
+squares you have already visited but also <i><b>how you got there</b></i>.
+The <span class="code">visited</span> is an array of structures that
+contain both a boolean (has this square been visited?) and a
+<span class="code">Coordinate</span> (how did we get here?).
+You are free to modify, remove, and add variables to your class.</p>
+
+<p><div class="points easy">1</div>To be able to visualize your maze-solving
+procedure, you must also implement the member function
+<span class="code">get_path</span>, which returns the current path through
+the maze. The renderer will call this function after enqueue operations
+to update the display and show you the current state. This time, you
+have all the information you need stored in the
+<span class="code">visited</span> member array and should not require a
+helper function in your queue class. Again, it would be in your best
+interest to avoid using <span class="code">enqueue()</span> and
+<span class="code">dequeue()</span> functions.</p>
+
+<h4>1.5 Analysis</h4>
+
+<p><div class="points easy">1</div>In a text file called
+<span class="code">README</span> in the <span class="code">maze</span>
+subdirectory, explain the conditions under which one search algorithm
+(from the set {BFS, DFS}) may be faster than the other. Give one
+"real-life" example of using/task that can be accomplished with a stack,
+and another example of using/task that can be accomplished with a queue.
+Maze solving doesn't count &mdash; try to think of something new!</p>
+
+<h3>Challenge problem: Quadtrees</h3>
+
+<div class="attention">Objectives in this section are intended to
+be challenging and may take longer than the others. Attempt this
+section only if you have the time!</div>
+
+<p></p>
+
+<div class="quote">Compile the quadtree application by running
+<span class="code">make quadtree</span>, and run it with
+<span class="code">bin/quadtree</span>. Clicking inside the window
+issues a query, of which you will see a graphical representation.
+Press 'a' to add 50 more points to the tree, 'r' to reset, and 'q'
+to quit.</div>
+
+<p><div class="points hard">5</div>You have been provided a simple
+quadtree visualizer application and stripped source files in the
+<span class="code">quadtree</span> subdirectory. Fill in the quadtree
+base and node classes, found in <span class="code">quadtree/src/Quadtree.{cpp,h}</span> and
+<span class="code">quadtree/src/QuadtreeNode.{cpp,h}</span>, to correctly implement
+a quadtree. We are not giving you much guidance on this section on
+purpose; reading the provided function headers would be helpful! We have
+only included the "bare minimum" functions your classes should implement;
+feel free to add others.</p>
+
+<div class="hint">If you have any questions about this week's assignment,
+please contact cs2tas@caltech.edu, or show up at any TA's office hours.</div>
+
+</div>
+</body>
+</html>

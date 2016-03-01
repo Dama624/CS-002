@@ -1,0 +1,466 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin-top: -21px;
+        margin-left: 66px;
+        border-left: 1px solid gray;
+        padding-left: 24px;
+        margin-bottom: -15px;
+    }
+
+    div.content {
+        padding-top: 21px;
+        padding-bottom: 15px;
+    }
+
+    h1 {
+
+    }
+
+    hr {
+        color: gray;
+        background-color: gray;
+        height: 1px;
+        margin-left: -24px;
+        margin-right: -24px;
+        border: 0px solid gray;
+    }
+
+    .draft {
+        color: #008080;
+    }
+
+    table {
+        padding: 0;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    tr {
+        margin: 0;
+        padding: 2px;
+    }
+    td {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+    th {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+
+
+    span.keyword {
+        font-weight: bold;
+    }
+    span.emph {
+        font-style: italic;
+    }
+    span.hilite {
+        text-decoration: underline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.author {
+        float: right;
+        margin-top: 27px;
+        color: grey;
+    }
+
+    .code {
+        font-family: monospace;
+    }
+    pre.code {
+        background: ghostwhite !important;
+        border: 2px dashed grey !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+        padding-right: 21px !important;
+        padding-left: 21px !important;
+    }
+    div.attention {
+        background: lightcoral;
+        border: 2px dashed red;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.quote {
+        background: lightblue;
+        border: 2px dashed steelblue;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.hint {
+        background: lightgreen;
+        border: 2px dashed green;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.points {
+        float: left;
+        text-align: right;
+        margin-left: -88px;
+        min-width: 50px;
+    }
+    li div.points {
+        margin-left: -128px;
+    }
+    div.points.easy {
+        color: #008000;
+    }
+    div.points.hard {
+        color: #800000;
+        font-weight: bold;
+    }
+</style>
+<title>CS2 Assignment 7: Network Programming</title>
+</head>
+
+<body>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=cpp"></script>
+<div class="content">
+
+<div class="author">Author: Ben Yuan</div>
+<h1>CS2 Assignment 7: Network Programming</h1>
+<h2>Due Tuesday, February 23, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on network programming.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named <span class="code">cs2week7-[NAME].zip</span> or a tar.gz file named <span class="code">cs2week7-[NAME].tar.gz</span>, and upload it to the Week 7 assignment module on Moodle.</p>
+
+<p><div class="points hard">0</div>Remember that while you are encouraged to at least attempt the "elevated difficulty" points (as exemplified by this example paragraph), they are targeted primarily toward experienced students looking for an additional challenge. You should <span class="emph">not</span> feel obligated to complete them if you find that you are having trouble with them.</p>
+
+<div class="attention">Network programming is a demanding topic, and this assignment is no different. Start early!</div>
+
+<hr />
+
+<h2>Assignment Background</h2>
+
+<h3>Basics</h3>
+
+<p>Computer networks are ubiquitous in our world. Everything from email to social networking to online commerce depends on computers in very different physical locations, even thousands of miles apart, being able to communicate with each other and exchange data. It takes a massive amount of interconnected infrastructure and specialized equipment to be able to accomplish this goal for a large amount of users; we call the product of this interconnection "the Internet".</p>
+
+<p>Whether we're talking about the four-node ARPANET of late 1969 or the billions of computers connected by the modern Internet, any computer network has a few common elements:
+<ul>
+<li>Networks are built to connect many <span class="keyword">hosts</span>, or host computers.</li>
+<li>In between the hosts, <span class="keyword">switches</span> and <span class="keyword">routers</span> guide information from host to host.</li>
+<li>Hosts and routers are connected to each other by <span class="keyword">links</span>, which carry packets. Usually we think of links as wires, but wireless links are also common.</li>
+</ul>
+</p>
+
+<p>Every computer on the network has an address by which it is identified. This is usually an IPv4 address, that is, an address of the form "123.45.67.89" - four numbers from 0 to 255, for a total of 4,294,967,296 possible addresses. Because numbers are often difficult to remember, the modern Internet supports <span class="keyword">hostnames</span>, a mechanism by which each IPv4 address can be associated with a human-readable name. Hostnames are usually assigned by a <span class="keyword">DNS server</span>, a special type of host that maintains mappings from hostnames to IP addresses.</p>
+
+<p>Because a given host might run more than one network application, the most common infrastructure-level protocols have a notion of <span class="keyword">port numbers</span> - basically a number assigned to a particular type of traffic to different types of traffic, so that the host can assign the correct type of traffic to the correct application that is listening for it. For instance, most HTTP traffic runs on port 80, while most SSH traffic runs on port 22; the different port numbers ensure that an HTTP client doesn't receive unwanted SSH traffic and vice versa.</p>
+
+<h3>Sockets</h3>
+
+<p>Most of the low-level operations required for communicating on a modern computer network are handled by the operating system, which provides a networking stack that applications can use. A typical application never needs to access the networking hardware directly. Instead, the operating system provides one or more <span class="keyword">sockets</span> - abstractions for the network device - that a program can use to send and receive data.</p>
+
+<p>There are two main types of sockets: <span class="keyword">TCP sockets</span> and <span class="keyword">UDP sockets</span>. TCP sockets require a connection before data can be sent or received, and provide guaranteed in-order delivery of stream-based data. Basically, an application can send as much data as it wants on a TCP socket without having to divide it up and have the assurance that all of it will get to the destination and be read by the destination in order. This guarantee is costly: no guarantees are made on delivery time. Consequently, TCP is good for applications that require reliable delivery of data, like browsing the Internet or reading email.</p>
+
+<p>On the other hand, UDP sockets are connectionless - they can send and receive arbitrary packets to anyone at any time - and UDP packets are not encumbered by flow control. However, UDP packets are not guaranteed to arrive in order, or at all. Consequently, UDP is good for applications that require immediate delivery of data but can recover from a few dropped packets, like video streaming and computer games.</p>
+
+<p>Sockets are provided by the operating system; Linux uses the POSIX sockets API, while other operating systems provide their own APIs. Because the POSIX sockets API can be difficult for a new programmer to understand, we provide our own wrapper (in <span class="code">NetworkWrapper.hpp</span> and <span class="code">NetworkWrapper.cpp</span>). This wrapper performs a large amount of the necessary work for you; you need only invoke the correct operations corresponding to what you need to do.</p>
+
+<h3>The CS2 Socket API</h3>
+
+<p>Everything in the CS2 socket API lives in the <span class="code">CS2Net</span> namespace. This is done to prevent confusion between the CS2 socket API and other functions or objects that may have similar names to those provided by our API.</p>
+
+<p>The core of the CS2 socket API is the <span class="code">CS2Net::Socket</span> object. This object represents an operating-system socket. We don't know upon instantiation whether it is a server socket (listens for incoming connections) or a client socket (connects to a remote host); what we do with it after instantiating it determines its identity.</p>
+
+<h4>Client-Side Operations</h4>
+
+<p>The first thing we do with an empty socket is connect to a host:</p>
+
+<pre class="prettyprint code">CS2Net::Socket sock;
+std::string hostname("foo.example.net");
+uint16_t port = 47000;
+
+int ret = sock.Connect(&amp;hostname, port);
+if(ret &lt; 0)
+{
+    // something terrifying happened x_X
+    if(ret == -1)
+    {
+        ERROR("connect error: %s", strerror(errno));
+    }
+    else if(ret == -3)
+    {
+        ERROR("connect error: %s", gai_strerror(errno));
+    }
+    else
+    {
+        ERROR("programmer is doing it wrong");
+    }
+}
+else
+{
+    // we connected yay
+    do stuff;
+}
+</pre>
+
+<p>This could fail for any number of reasons: connecting may not make sense because we're already connected to something, or the network cable is not connected, or the remote host might be refusing connections. Suppose we can connect successfully, though. We can now send and receive data.</p>
+
+<p>Suppose we <span class="emph">know</span> that we have some data incoming. We can do this:</p>
+
+<pre class="prettyprint code">CS2Net::Socket sock;
+// ... connect sock ...
+
+std::string * incoming = sock.Recv(1024, false);
+if(incoming == NULL)
+{
+    // bad stuff happened
+    ERROR("recv error: %s", strerror(errno));
+}
+else
+{
+    // we got some data yay
+    do stuff;
+}
+</pre>
+
+<p>The <span class="code">CS2Net::Socket::Recv()</span> function is <span class="keyword">blocking</span>. That means that, when run, it stops the entire thread until some amount of data is available. The second parameter to <span class="code">CS2Net::Socket::Recv()</span> determines how 'hard' this block is: if false, then the function unblocks as soon as any amount of data is available, while if true, then the function blocks until all of the requested data has come in or a read error of some kind has occurred. While it is possible to have a non-blocking socket (that is, one for which I/O operations will error instead of blocking if no data is available), proper non-blocking I/O is a subtle topic beyond the scope of this assignment.</p>
+
+<p>Now suppose we want to send some data. We can do this:</p>
+
+<pre class="prettyprint code">CS2Net::Socket sock;
+// ... connect sock ...
+
+std::string to_send("some stuff to send");
+
+int ret = sock.Send(&amp;to_send);
+if(ret &lt; 0)
+{
+    // bad stuff happened
+    if(ret == -1)
+    {
+        ERROR("send error: %s", strerror(errno));
+    }
+    else
+    {
+        ERROR("programmer is doing it wrong");
+    }
+}
+else
+{
+    // we sent some data yay
+    do stuff;
+}
+</pre>
+
+<p>Sending, like receiving, is a blocking operation, but you will probably not observe send-blocking with the small amounts of data we are sending for this assignment.</p>
+
+<p>Now suppose we want to disconnect this socket. This happens automatically when a <span class="code">CS2Net::Socket</span> object gets destroyed or goes out of scope. Alternatively, we can do this to disconnect a socket without destroying it:</p>
+
+<pre class="prettyprint code">CS2Net::Socket sock;
+// ... connect sock ...
+// ... do stuff ...
+
+int ret = sock.Disconnect();
+if(ret &lt; 0)
+{
+    // bad stuff happened
+    if(ret == -1)
+    {
+        // you might actually be able to ignore these errors
+        // but we'll print them anyway
+        ERROR("disconnect error: %s", strerror(errno));
+    }
+    else
+    {
+        ERROR("programmer is doing it wrong");
+    }
+}
+
+</pre>
+
+<h4>Polling Sockets</h4>
+
+<p>Suppose your application can't afford to wait to receive on a socket all the time, because there is other processing that the application must do in the background. This is common for GUI-based applications (for example, the chat client you will be completing). Alternatively, suppose your application needs to check multiple sockets and can't afford to wait on each one in turn.</p>
+
+<p>The operating system provides a mechanism to wait on multiple sockets at once, with an optional timeout, and mark the socket or sockets that are ready for reading or writing. Our abstraction layer exposes this polling functionality (which is otherwise not very easy to set up).</p>
+
+<p>For one socket, the setup looks something like this:</p>
+
+<pre class="prettyprint code">CS2Net::Socket sock;
+// ... connect socket ...
+
+std::vector&lt;CS2Net::PollFD&gt; poll_vec(1);
+poll_vec[0].sock = &sock;
+poll_vec[0].SetRead(true);
+// now do the poll (10 ms timeout)
+int poll_err = CS2Net::Poll(&amp;poll_vec, 10);
+REQUIRE(poll_err >= 0, "error on poll!?");
+
+// is there a hangup or error?
+if(poll_vec[0].HasHangup() || poll_vec[0].HasError())
+{
+    // o noes there's a hangup and/or error
+    handle error;
+}
+// did we get anything to read?
+if(poll_vec[0].CanRead())
+{
+    // yay the first socket is readable
+    do stuff;
+}
+</pre>
+
+<p>This code is not hard to extend to multiple sockets: one need only add more elements to the <span class="code">poll_vec</span> vector. Notice that the <span class="code">CS2Net::Poll()</span> function modifies the constituent <span class="code">CS2Net::PollFD</span> objects in place, so for multiple sockets, you would iterate over the same vector you provided to check the results for each socket of interest.</p>
+
+<p>Observe the following: a socket can report that it has data to read, but a subsequent read may return no data (without blocking). This indicates that the socket has been closed from the other end. You will need to detect this condition and handle it accordingly.</p>
+
+<h4>Server-Side Operations</h4>
+
+<p>We consider the flip side now: other applications are connecting to us, and we need to handle incoming connections. We need to bind this socket first:</p>
+
+<pre class="prettyprint code">CS2Net::Socket listener;
+CS2Net::Socket * incoming_conn = NULL;
+
+// bind to some arbitrarily chosen port
+// with a backlog of 3 connections allowed
+int err = listener.Bind(31337, 3);
+REQUIRE(err == 0, "Failed to bind!");
+</pre>
+
+<p>In actuality, you would subsequently have to then tell the socket to listen for incoming connections, but our wrapper does that automatically for you (because there are no common cases where you would bind without listening).</p>
+
+<p>Now that we have a socket that is listening for connections, we can accept connections as they come in:</p>
+
+<pre class="prettyprint code">CS2Net::Socket listener;
+CS2Net::Socket * incoming_conn = NULL;
+
+// ... bind socket ...
+
+incoming_conn = listener.Accept();
+REQUIRE(incoming_conn != NULL, "Failed to accept!");
+</pre>
+
+<p>The <span class="code">CS2Net::Socket::Accept()</span> function is also a blocking function: it blocks until there's a connection to accept. It outputs a newly allocated <span class="code">CS2Net::Socket</span> object which can be used to send and receive from the incoming host as normal. When you're finished with this object, it must be deallocated via <span class="code">delete</span> (which disconnects the other end automatically).</p>
+
+<p>Because accepting a connection is a blocking operation, the <span class="code">CS2Net::Poll()</span> function also supports polling "listener" sockets, although such sockets don't ever send or receive data. If a listener socket has a pending connection, then it will report when polled that it has some data to read, which allows a server to accept new connections as they come in without having to block an entire thread to do so.</p>
+
+<h2>Prerequisites</h2>
+
+<p>These are the prerequisites for getting this assignment to compile (ubuntu package names):
+<ul><li>g++ 4.6.x+</li>
+<li>libgtk2.0-dev (and dependencies)</li>
+<li>libglade2-dev (may not actually be a prereq?)</li>
+</ul>
+Ask a TA if you need help retrieving these packages, or if these packages appear to be missing from the CS cluster.</p>
+
+<h2>Assignment (20 points)</h2>
+
+
+<h3>Part 1: First Steps</h3>
+
+<p>You'll need to get comfortable working with the network wrapper first before you can tackle the featureful chat client. To that effect, we'll ask you to complete some simple tasks.</p>
+
+<p>We suggest that you outline each task before actually trying to write code. You do not need to submit your outlines, but writing them up will help you better understand what you will need to do.</p>
+
+<p><div class="points easy">5</div>The simplest possible client that does anything meaningful is one that connects to a server, sends one message, receives one message, and then promptly disconnects. Write a program that does this. Specifically, you should connect to <span class="code">halo.cms.caltech.edu</span>, port 47000, and send a single message of your choice. You should then retrieve and display the reply on the command line. Do all this in the files <span class="code">src/client0.hpp</span> and <span class="code">src/client0.cpp</span>. You may assume that all messages will be less than 1024 bytes in length.</p>
+
+<p><div class="points easy">4</div>On its own, though, such a client can't do much. We want to be able to send multiple messages over the lifetime of a connection. Crucially, we also want to respond to incoming messages as they come in without having to wait forever for them. In the files <span class="code">src/client1.hpp</span> and <span class="code">src/client1.cpp</span>, write a client program that sends a message to a remote server <span class="hilite">not more than once per second</span>, while displaying any incoming messages immediately as they arrive. You may assume that all messages will be less than 1024 bytes in length, and you should not send messages longer than that (as they may be truncated by the remote server). For this portion, you should connect to <span class="code">halo.cms.caltech.edu</span>, port 47001.</p>
+
+<p>For rate-limiting, you can use <span class="code">sleep()</span> or <span class="code">usleep()</span> (both defined in <span class="code">unistd.hpp</span>) or a similar mechanism. You should not test your code without at least attempting to perform rate-limiting. Keep in mind as well that whatever you send to the server will be rebroadcasted to every connected client.</p>
+
+
+<h3>Part 2: The Featureful Chat Client</h3>
+
+<p>This next part will involve a bit of GTK+ work. You won't have to touch the UI itself (too much), but you'll need to know at least roughly how things are laid out. Open up <span class="code">src/client2.hpp</span> and <span class="code">src/client2.cpp</span> and follow along.</p>
+
+<p>The <span class="code">main()</span> function loads a description of the user interface for this featureful chat client, and then connects various callbacks to particular elements. Whenever a user interacts with any element in a GTK+ user interface, a signal is emitted, and the callback registered for that particular signal on that particular element gets called; for instance, when a user clicks on the "Connect" button, the <span class="code">ShowConnectDialog()</span> function gets called, because it's registered as the handler for that button's "clicked" signal. These callback registrations are performed by <span class="code">main()</span>. After these callbacks are set up, <span class="code">main()</span> orders the main window to be shown, and then runs the GTK+ main loop.</p>
+
+<p>Most of the actually-important code lives in the callbacks. Here's what each one is supposed to do:</p>
+
+<ul>
+<li><span class="code">PollSocket()</span> is called whenever GTK+ has nothing better to do. This function is supposed to poll the client's connection socket for incoming data, given that the connection is open and data is available to read.</li>
+<li><span class="code">ProcessChatLine()</span> is called whenever a user presses the Enter key in the chat entry box. This function is supposed to take the contents of the entry box and transmit them as a chat message to the remote party.</li>
+<li><span class="code">ShowConnectDialog()</span> is called when the user clicks on the Connect button in the toolbar. This function will display the connection dialog. You do not need to modify this function.</li>
+<li><span class="code">DisconnectCallback()</span> is called when the user clicks on the Close button in the toolbar. This function will do everything needed to disconnect from the server. You do not need to modify this function.</li>
+</ul>
+
+<p>Additionally, there are several helper functions:</p>
+
+<ul>
+<li><span class="code">DoConnect()</span> and <span class="code">DoDisconnect()</span> perform the actual socket manipulations required for connecting and disconnecting from the server.</li>
+<li><span class="code">SendMessage()</span> sends arbitrary messages of particular message types to the remote server. Message formats are discussed below.</li>
+<li><span class="code">AddLineToBuffer()</span> adds a line of text to the chat buffer. You don't have to modify this code.</li>
+<li><span class="code">SetUserList()</span> sets the contents of the user list on the right side of the screen. You don't have to modify this code.</li>
+</ul>
+
+<p>The messages sent to and received from the server are structured in a specific manner, at the byte level:</p>
+
+<ul>
+<li>The first byte (0x00 - 0xFF) encodes the message type. The message types are defined in <span class="code">CS2ChatProtocol.hpp</span>.</li>
+<li>The next two bytes encode the payload size in little-endian format. That is, the least significant byte comes first; decimal 1000 is encoded as <span class="code">E8 03</span>. Note that this is identical to the byte order on the X86 platform, and is directly opposite to network byte order (which encodes numbers in big-endian format by convention).</li>
+<li>If the payload size is nonzero, then the remaining bytes constitute the payload.</li>
+</ul>
+
+<p>When you're reading in such a packet, you should first read in the three-byte header and interpret it. Only if the payload size is nonzero should you attempt to read in the payload (as trying to read zero bytes <span class="emph">does</span> block.</p>
+
+<p><div class="points easy">5</div>Here's what you need to do:</p>
+
+<ul>
+<li><span class="code">DoConnect()</span> needs to attempt to open a connection to the specified server; if this succeeds, it should proceed to send the requested username (in the correct type of message, not by itself!) and wait for an AUTH_OK message. Upon receiving an AUTH_OK message, it should set the <span class="code">connected</span> global variable to <span class="code">true</span>. If it encounters an error at any step, it should force the socket disconnected (if applicable) and display a suitable error message.</li>
+<li><span class="code">PollSocket()</span> needs to poll the open socket and handle any incoming messages properly. It should report any errors appropriately.</li>
+<li><span class="code">EncodeNetworkMessage()</span> needs to create and return a valid message whose bytes are as specified above.  Be sure to run the accompanying testsuite to test for this function's correctness.</li> <ul><li><span class="keyword">Note</span>: this function is defined entirely in <span class="code">client2.hpp</span>. You can test its correctness by building the provided testsuite (<span class="code">make testsuite</span>).</li></ul>
+<li><span class="code">SendMessage()</span> needs to send messages properly on the open socket. It should report any errors appropriately.  This function should utilize the <span class="code">EncodeNetworkMessage()</span> function to create the actual message sent over the open socket.</li>
+<li><span class="code">ProcessChatLine()</span> needs to send chat messages over the network instead of echoing input to the chat buffer.</li>
+</ul>
+
+<p>You can test your chat client by connecting to <span class="code">halo.cms.caltech.edu</span>, port 47002.</p>
+
+<h3>Part 3: Some Server-Side Code</h3>
+
+<p>Now that we've done some client-writing, we should approach the problem of server-writing.</p>
+
+<p><div class="points easy">3</div>Just as there's a simplest possible client, there's a simplest possible server: one that continuously does the following - accepts a single incoming connection, grabs a single message from it, echoes the message back to the client, and then closes the connection. Write this code in <span class="code">src/server0.hpp</span> and <span class="code">src/server0.cpp</span>.</p>
+
+<p><div class="points hard">3</div>Now you should extend this server so it can handle multiple persistent connections, reading messages from remote hosts as they become available and rebroadcasting anything it receives to every connected host. You'll need to use polling to accomplish this objective. Write this code in <span class="code">src/server1.hpp</span> and <span class="code">src/server1.cpp</span>.</p>
+
+<p><div class="points hard">5</div>We <span class="emph">know</span> there are some of you who will be ambitious enough to take on the next logical step: to write a server that can support the features of the featureful client. <span class="emph">This is not an easy task.</span> If you're considering completing this task, then you should already have an idea of what you need to do. Write this code in <span class="code">src/server2.hpp</span> and <span class="code">src/server2.cpp</span>.</p>
+
+
+<h3>Part X: Miscellaneous Items</h3>
+
+<p><div class="points hard">2</div>You notice that "Autoscroll" button in the toolbar of the featureful client? Notice how it's greyed out? The default client autoscrolls the chat buffer (or should!) whenever you get a message. Make the autoscroll button useful: let it toggle this behavior. We're intentionally not giving you much guidance for this task, but to get you started, the button itself is a <span class="code">GtkToggleToolButton</span> with the internal name <span class="code">autoscroll_toggle</span> that starts out as active and insensitive.</p>
+
+
+<p>&nbsp;</p>
+
+<p>If you have any questions about this week's assignment, please contact &lt;cs2tas-2016@caltech.edu&gt;, or show up at any TA's office hours.</p>
+
+</div>
+
+
+
+</body>
+
+</html>

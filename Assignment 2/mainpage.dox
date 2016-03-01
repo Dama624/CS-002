@@ -1,0 +1,15 @@
+/**
+@mainpage CS2 Assignment 2 - Sorting
+
+@section looking_around Looking around
+
+On the top bar you can see two sections: "Classes" and "Files". 
+
+Clicking on "Classes" will bring up a list of all classes in the project.
+This project has five: ConvexHullApp, LineApp, List, Node, and Tuple.
+
+Clicking on "Files" will bring up a list of all files in the project.
+
+Clicking on any class or file name brings up a more detailed description
+of the class or file in question.
+*/

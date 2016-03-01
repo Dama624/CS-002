@@ -1,0 +1,848 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="cs2_assignment.css" rel="stylesheet" type="text/css" />
+<title>CS2 Assignment 1: Introduction to C++</title>
+<script src="google-code-prettify/run_prettify.js"></script>
+</head>
+
+<body>
+<div class="content">
+
+<div class="author">Authors: Ben Yuan <br/> and Ellen Price</div>
+<h1>CS2 Assignment 1: Introduction to C++</h1>
+<h2>Due Tuesday, January 12, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction and course policies</h2>
+
+<p>Welcome to CS2: Introduction to Programming Methods. In this course, you will learn about a collection of fundamental methods used in computer programming, including recursion, dynamic programming, graph algorithms, and other similar topics. You will be introduced to these at a theoretical level during the lectures; assignments will enable you to put the ideas you learn into practice, hopefully in an interesting manner. This course also functions as a survey course for a large portion of the advanced courses offered by the Computer Science option; topics covered in this course will be revisited in greater detail in higher-level courses.</p>
+
+<p><div class="points easy">0</div>Off to the left side, you will see numbers. Such a number represents the point value of completing the objective denoted in the paragraph next to it. Most assignments have around 15 "main" points to earn, designated in green as demonstrated here; we expect all students to be able to complete these objectives.</p>
+
+<p><div class="points hard">0</div>Higher-level points, where they exist, will be denoted in bolded red as demonstrated here. These higher-level objectives are intended for experienced students, and are by <span="hilite">no</span> means required for course completion. Don't spend too much time on these if you're having trouble!</p>
+
+<h3>Lectures and recitations</h3>
+
+<p>This course will have two lectures each week every Monday and Wednesday. Lectures will concentrate on the main ideas behind each week's topic, and will thus not present a large volume of code. Additionally, this course will have one recitation each week every Friday. Recitation will usually cover information directly related to the week's assignment.</p>
+
+<h3>Homework due dates and extensions</h3>
+
+<p>Homework is due on <span class="hilite">Tuesday afternoons at 17:00 Caltech time</span> unless specified otherwise. An ample number of office hours sections will be provided prior to each assignment due date. Office hours will be posted on the course web site when they are finalized.</p>
+
+<p><span class="emph">If you're having trouble with the homework, or with any other part of the course, please come to office hours!</span> We've had students in the past fall into unfortunate situations that could have been avoided had they talked to a TA beforehand.</p>
+
+<p>We recognize that not everyone will be able to meet all of the deadlines. Consequently, we permit a limited number of extensions to be taken. In brief, our extension policy works as follows:</p>
+<ul>
+<li>We permit <span class="hilite">two</span> extensions of <span class="hilite">48</span> hours each. These extensions may be taken consecutively (resulting in one 96-hour extension), or nonconsecutively (applied to two different assignments).</li>
+<li>Extensions will be applied automatically to late work if available. There is no need to notify us that you are taking an extension, and doing so will not affect extension processing.</li>
+<li>Due dates, both original and extended, are measured according to the time kept on the courses.caltech.edu website. These due dates are precise unless designated otherwise by a TA.</li>
+<li>Homework submitted after the due date, extended by any available extensions, is considered late and will accrue a penalty. One-third of the grade that would have been assessed had the assignment been on time will be removed for every 24 hours (or <span class="hilite">any</span> fraction thereof) that the assignment is late. For instance, a grade of 12 would be reduced by 4 points for every block of 24 hours the assignment is late.</li>
+<li>Grades for individual assignments are never reduced below zero points.</li>
+<li>If your reason for being late is backed by a Health Center note or a letter from the Deans' office, penalties will be removed and extensions will be refunded as necessary.</li>
+<li>In extraordinary circumstances outside the control of students, TAs, and professors, the professors and head TAs may remove penalties, refund extensions, and shift due dates independently of the other terms of this policy.</li>
+</ul>
+<p>Note that the above, while a mostly accurate summary, does not supersede the policy posted on the course web site.</p>
+
+<h3>Homework and course grading</h3>
+
+<p>Each assignment will be graded out of 20 points total (though there may be more than 20 earnable points). Most assignments will be submitted for grading to the Moodle website at courses.caltech.edu, with one or two graded via Bitbucket - we will not grade assignments sent by email. <span class="emph">You must be enrolled in this class according to the Moodle system for your work to be graded.</span></p>
+
+<p>Many of the objectives for each assignment will be coding-based. We expect all submissions to at least compile on receipt. <span class="emph">If part of a submission consists of code that does not compile, the grading TA is not obligated to give any credit for that part.</span></p>
+
+<p>The overall term will be graded out of 200 points. This is a pass-fail course; you must earn at least 120 points, and make a reasonable attempt at all assignments, to pass.</p>
+
+<p>Observe that <span class="hilite">all assignments</span> must be attempted and submitted by the end of finals week for a passing grade to be assessed. E grades are not given. Grades of I will only be permitted in the usual extraordinary circumstances for which such a grade would be assessed (severe illness or other emergency, at the discretion of the Deans' office).</p>
+
+<h3>Collaboration policy</h3>
+
+<p>We have tried to make each homework as self-contained as possible. That said, we aren't going to be able to cover everything in the homework writeup, lectures, or recitation. Occasionally, you may need to consult external resources, and this is usually fine; in fact, we can recommend a handful of excellent resources for this purpose (check the course website). What we don't want you to do is look up answers when we want you to synthesize those answers yourself.</p>
+
+<p>Additionally, CS2 is a programming-heavy course, and nothing can substitute for hands-on experience. While we do want you to help each other out in this process, we occasionally see students who overstep the boundary between "getting help with debugging" and "copying another student's code"; we <span class="emph">are</span> looking out for such cases, and to be honest, such students are only sabotaging their own learning experiences even if we don't catch them. We don't want you to become those students - we're much more interested in seeing you grow and develop properly.</p>
+
+<p>To this end, our collaboration policy, in brief, is as follows:</p>
+<ul>
+    <li><span class="keyword">Anything you turn in for grading must fundamentally be your own work.</span></li>
+    <li>When helping other students with debugging, keep your own code 50 feet away. Help students with your brain, not with your code.</li>
+    <li>Sometimes you'll generate code while helping or being helped. That's fine. But if it's not your own code, then destroy it before continuing.</li>
+    <li>External resources are cool. Getting outright answers from them is not. When in doubt, ask.</li>
+</ul>
+<p>Note that the above, while a mostly accurate summary, does not supersede the policy posted on the course web site.</p>
+
+<h3>Platform requirements</h3>
+
+<p>The assignments in this course are extremely coding-heavy and will be done in C++. Some of the advanced assignments deal with features and behavior that will differ across platforms, and the CS2 TA team does not have the resources to support every platform in existence. To this end:</p>
+<div class="attention">The only platforms we support in this class are 32-bit Linux and 64-bit Linux.</div>
+<p>The TAs cannot provide support for Windows or Mac OS X and cannot guarantee that all assignments will even compile on those platforms. We encourage you to register for a CS cluster account so that you can use the machines in the Annenberg computer lab; if you are unable to provide your own Linux environment, then you will be <span class="hilite">required</span> to have a CS cluster account.</p>
+<p>Be warned: you ignore this requirement at your own peril!</p>
+
+<h3>Miscellany</h3>
+
+<p>We have made some changes to the course from past years, and we hope that they will work out in your favor. If you have any feedback that you would like to offer, you are welcome to contact us at &lt;cs2tas-2016@caltech.edu&gt;. This email reaches all current CS2 TAs and professors. Additionally, TQFR surveys are conducted at the end of each term; feel free to fill these out when they are made available. CS2 students come from a wide variety of talents, and we are interested in knowing if the course has been sufficiently instructive and challenging for you.</p>
+
+<p>If you find that CS2 appears to be progressing too slowly and would like to 'test out', a placement test does exist; you may ask the professors or head TAs for a copy. <span class="emph">Observe that the placement test is <span class="hilite">much</span> more difficult than most of the content of the course</span>. Also observe that the difficulty of the course will increase as more advanced topics are covered. Passing the placement test exempts you from the CS2 requirement for graduation if you are in the Computer Science option, but does not grant you credit for the course.</p>
+
+<hr />
+
+<h2>Assignment background</h2>
+
+<p>C++ is a multi-paradigm, statically typed, general-purpose compiled language, descended from the venerable C language, used for a variety of different applications and available on a plethora of different platforms. Since C++ compiles to native machine code, using C++ can, in the right hands, enable the creation of applications that outperform their interpreted-language counterparts by impressively wide margins. While C++ does not have as extensive a standard library as higher-level languages like Python or Java, third-party libraries have been developed for almost every imaginable purpose, and existing C libraries can be integrated into C++ programs with minimal effort.</p>
+
+<p>As a direct descendant of C, C++ provides no automatic memory management by default: while some automatic garbage collection primitives do exist, their use will not be covered in this course. Hence, the burden is largely on the programmer to ensure that resources are properly cleaned up after use. Additionally, as a direct descendant of C, C++ provides <span class="keyword">pointers</span>, which are used to <span class="emph">reference</span> data elsewhere in memory, as well as <span class="keyword">pointer arithmetic</span>, which allows pointers to be reassigned to point to adjacent data in memory.</p>
+
+<p>While C++ is a multi-paradigm language, one of its most well-known features is its support for <span class="keyword">object-oriented programming</span>. In this paradigm, an application is described by objects and their interactions with each other. Objects consist of sets of data fields and member functions describing the properties and behavior of each object type.</p>
+
+<p>Objects are sorted into <span class="keyword">classes</span>. Each class describes a different type of object, each with its own properties and behaviors. Classes can be <span class="keyword">instantiated</span>; that is, objects of a particular class can be created. Each object is mostly independent of the other objects in the program, even objects of the same class; however, objects of the same class will behave alike.</p>
+
+<h2>Prerequisites</h2>
+
+<p>This assignment relies primarily on having a working development environment.</p>
+
+<p>Ask a TA if you need help setting up your environment.</p>
+
+<hr />
+
+<h2>Assignment (20 points)</h2>
+
+<p>When you are finished with this assignment, please archive the assignment directory in an archive file named <span class="code">USERNAME-cs2-week1.tar.gz</span> or <span class="code">USERNAME-cs2-week1.zip</span>, and upload it to Moodle.</p>
+
+For example, to create an archive file named <span class="code">USERNAME-cs2-week1.tar.gz</span> from a directory named <span class="code">USERNAME-cs2-week1/</span>, you can open a terminal and run this command:
+<pre class="prettyprint code">
+tar -czvf USERNAME-cs2-week1.tar.gz USERNAME-cs2-week1/
+</pre>
+
+<h3>Part 0: Compiling and Debugging Basics</h3>
+
+<h4><span class="code">g++</span>: A C++ Compiler</h4>
+
+<p>C++ is a compiled language, and the standard compiler we'll use is g++. g++ is part of the well-respected GCC (GNU Compiler Collection) suite; its purpose is to convert C++ code into native code suitable for a target platform. This first exercise will show you how to invoke the g++ compiler by hand.</p>
+
+<p>Here's a complete C++ program:</p>
+
+<pre class="prettyprint code">
+/******
+*
+* @file hello.cpp
+* @author The CS2 TA Team &lt;cs2tas-2016@caltech.edu&gt;
+* @date 2016
+* @copyright This code is in the public domain.
+*
+* @brief The canonical Hello World program in C++.
+*
+* This program prints out "Hello, world!" to standard output.
+*
+******/
+
+/*
+This, like the preceding block, is a block (multi-line) comment.
+It is ignored by the compiler.
+*/
+
+// This is a single-line comment.
+// The // marks everything until the end of the line as a comment.
+
+// First we include any 'external' libraries.
+// In this case we only need the standard I/O library
+#include &lt;iostream&gt;
+
+// Use the namespace for the C++ Standard Libray.
+// This allows us to write:
+//     cout << "Hello, world!" << endl;
+// instead of:
+//     std::cout << "Hello, world!" << std::endl;
+using namespace std;
+
+/**
+* @brief Prints "Hello, world!" and exits.
+*
+* This program prints out "Hello, world!" to the terminal. It is the C++
+* version of the canonical "Hello World" example, used to demonstrate
+* a few of the most basic constructs of a programming language: the
+* structure of a minimal program, as well as the syntax required for
+* output to the terminal.
+*
+* Even the simplest of C++ programs, like this one, has a main() function.
+* This function is invoked first, by convention, and under normal operation
+* returns last.
+*/
+int main(int argc, char ** argv)
+{
+    // Print to the terminal.
+    cout << "Hello, world!" << endl;
+
+    // By convention, main() always returns 0 for successful execution.
+    return 0;
+}
+</pre>
+
+<p>Copy the contents of that code into a new file called 'hello.cpp'. Then open a terminal and run the following commands:</p>
+
+<pre class="code">cd /path/to/cs2/week1
+g++ -c -g -Wall --std=c++0x -o hello.o hello.cpp
+g++ -o hello hello.o
+./hello
+</pre>
+
+<p>In brief, each line after <span class="code">cd /path/to/cs2/week1</span> does the following:</p>
+
+<ul>
+    <li>Compiles the <span class="keyword">source file</span> <span class="code">hello.cpp</span> into an <span class="keyword">object file</span> <span class="code">hello.o</span>.</li>
+    <li>Links the <span class="code">hello.o</span> object file with the C++ Standard Library, producing a <span class="keyword">executable file</span> <span class="code">hello</span>. (Executable files may also be called <span class="keyword">binary files</span> by some sources; we may use this alternative term later on.)</li>
+    <li>Runs the <span class="code">hello</span> executable.</li>
+</ul>
+
+<p>You should hopefully see the following output afterwards:</p>
+
+<pre class="code">Hello, world!</pre>
+
+<p><div class="points easy">1</div>Include the generated executable with your archive submission. <span class="emph">Note: We usually will not ask you to include binaries in submissions; this is an exception!</span></p>
+
+<h4>About <span class="code">cout</span></h4>
+
+<p>It is often useful to be able to print out arbitrary output to the terminal. This is a good first-line debugging tool - being able to display intermediate computation steps and monitor program flow without a debugger is useful for verifying program correctness in a non-labor-intensive manner.</p>
+
+<span class="code">cout</span> is an object that represents the standard output stream. It can handle many different types of data using <span class="code"><<</span>, which is called the <span class="keyword">insertion operator</span>. 
+
+<p>For example:</p>
+
+<pre class="prettyprint code">
+// Here we're declaring and initializing some variables.
+// Notice that every variable in C++ has a data type.
+// Variables can only store values of the type with which they are declared.
+
+int foo;  // This is a signed integer value.
+          // Note that we have not initialized its value!
+          // Until and unless we do, its value is *indeterminate*;
+          // it could be 0, or -1, or 9001, or ...
+double bar = 5.0;  // This is a double-precision floating-point value.
+                   // Notice we have initialized its value to 5.0.
+const char * fish = "orange";  // This is a C-style string constant.
+                               // Notice the 'const' keyword.
+                               // You'll learn more about the * later.
+unsigned int protons = 3000000001;  // This is an unsigned integer value.
+
+// Print the contents of the variables
+cout << "foo: " << foo << endl;
+cout << "bar: " << bar << endl;
+cout << "fish: " << fish << endl;
+cout << "protons: " << protons << endl;
+</pre>
+
+<p>Now open up <span class="code">debugging1.cpp</span> and have a look inside.</p>
+
+<p><div class="points easy">2</div>Use <span class="code">cout</span> to display what's going on at each step of the computation and to print the result of the computation. Do you notice anything? What happens if you change a and b? Can you explain what this code is doing, and why it does what it does?</p>
+
+<p>Include the <span class="code">debugging1.cpp</span> file with your archive submission. Place your short answers inside a block comment after the file header, but before the first <span class="code">#include</span> statement.</p>
+
+
+<h4><span class="code">gdb</span>: A General-Purpose Debugger</h4>
+
+Print statements are remarkably useful, but they struggle to handle more challenging examples. Sometimes, we need to more methodically inspect the workings of our code in order to track down a problem.</p>
+
+<p>Open up <span class="code">debugging2.cpp</span> and have a look at the code. This code is <span class="emph">supposed</span> to be an implementation of the binary long-division algorithm. Try compiling and running it. You'll find that it doesn't actually work.</p>
+
+<p>The more experienced and careful readers among you may already have spotted the errors. Let's suppose you haven't. Make sure you used the <span class="code">-g</span> flag when compiling; otherwise the next steps won't work properly.</p>
+
+<p>Let's open up the GDB debugger and use it to figure out what's really going on. (Your terminal output may vary slightly depending on version.)</p>
+
+<pre class="code">
+$ <b>gdb ./debugging2</b>
+GNU gdb (Ubuntu/Linaro 7.4-2012.04-0ubuntu2.1) 7.4-2012.04
+Copyright (C) 2012 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+For bug reporting instructions, please see:
+&lt;http://bugs.launchpad.net/gdb-linaro/&gt;...
+Reading symbols from /path/to/debugging2...done.
+(gdb)
+</pre>
+
+<p>To exit the debugger at any time, enter <span class="code">quit</span> into the GDB prompt.</p>
+
+<p>At this point we can just run the program by entering <span class="code">run</span>, but that would tell us little on its own. We should be a little more methodical. We can set a <span class="keyword">breakpoint</span>, which tells GDB to stop when it reaches the corresponding line of code:</p>
+
+<pre class="code">
+(gdb) <b>break debugging2.cpp:76</b>
+Breakpoint 1 at 0x400898: file debugging2.cpp, line 76.
+(gdb) <b>run</b>
+Starting program: /path/to/debugging2
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe238) at debugging2.cpp:76
+76	    cout << divide(15625, 37) << endl;  // should print 422
+(gdb)
+</pre>
+
+<p>We have a few ways of advancing program flow at this point:</p>
+
+<ul><li><span class="code">step</span> (<span class="code">s</span>): advances the program by a single line of code, tracing into function calls</li>
+<li><span class="code">next</span> (<span class="code">n</span>): advances the program by a single line of code, without entering any functions</li>
+<li><span class="code">finish</span> (<span class="code">fin</span>): advances the program until the current function returns</li>
+<li><span class="code">continue</span> (<span class="code">c</span>): advances the program until the next breakpoint or program termination</li>
+</ul>
+
+<p>Let's trace into the <span class="code">divide()</span> function call.</p>
+
+<pre class="code">
+(gdb) <b>step</b>
+divide (a=15625, b=37) at debugging2.cpp:31
+31	    unsigned int x = 0, y = 0, z = sizeof(a) * 8;
+(gdb)
+</pre>
+
+<p>Let's get our bearings (your output may vary):</p>
+
+<pre class="code">
+(gdb) <b>backtrace</b>
+#0  divide (a=15625, b=37) at debugging2.cpp:31
+#1  0x0000000000400566 in main (argc=1, argv=0x7fffffffe238)
+    at debugging2.cpp:74
+(gdb) <b>print x</b>
+$2 = 0
+(gdb) <b>print y</b>
+$3 = 4195712
+(gdb) <b>print a</b>
+$4 = 15625
+(gdb) <b>print b</b>
+$5 = 37
+(gdb) <b>print a / b</b>
+$6 = 422
+</pre>
+
+<p>Note a couple of things:</p>
+
+<ul><li>Notice that either or both of <span class="code">x</span> and <span class="code">y</span> may not in fact be equal to zero at this point. The source code line displayed by gdb is always the line of code that will be executed next, for example by a <span class="code">next</span> command. Additionally, recall that variables in C++ are not initialized unless and until you assign them an initial value.</li>
+<li>The <span class="code">backtrace</span> command prints the call stack. That is, it lists all of the functions calls that have been made that have yet to return, most recent first.</li>
+<li>The <span class="code">print</span> command can print the results of essentially arbitrarily complex expressions, even those containing function calls. Take caution when calling functions with side effects in this manner.</li></ul>
+
+<p>After a step, we see this - our variables are now initialized:</p>
+
+<pre class="code">
+(gdb) <b>step</b>
+33	    while(z != 0)
+(gdb) <b>print x</b>
+$7 = 0
+(gdb) <b>print y</b>
+$8 = 0
+(gdb) <b>print a</b>
+$9 = 15625
+(gdb) <b>print b</b>
+$10 = 37
+(gdb)
+</pre>
+
+<p><div class="points easy">1</div>Do the steps above after starting
+<span class="code">gdb</span> with the special command
+<span class="code">gdb ./debugging2 2&gt;&amp;1 | tee gdb.log</span>. Include
+the generated file <span class="code">gdb.log</span> in your submission.</p>
+
+<p><div class="points easy">1</div>At this point you should have enough tools to figure out what's up with this example, if you haven't already. Fix the bug or bugs. Leave the fixed code in <span class="code">debugging2.cpp</span> and include it with your archive submission.</p>
+
+
+<h3>Part 1: Simple C++ Tasks</h3>
+
+<h4>Writing Functions and Function Calls</h4>
+
+<p>You've already seen functions being used in the previous example, and hopefully the general concept is not completely alien to you. In brief, a <span class="keyword">function</span> is a piece of code that may be invoked from elsewhere in the program; when invoked, given zero or more arguments, the function performs some useful work, possibly having side effects, and then may or may not return a value.</p>
+
+<p>Every function in C++, just like any variable, has a type. The type of a function is determined by the type of its arguments as well as the type of its return value; these are stated when the function is first declared. For instance,</p>
+
+<pre class="prettyprint code">double qfsolve(double a, double b, double c)</pre>
+
+<p>would describe a function that takes three double-precision floating-point arguments and returns a double-precision floating-point value.</p>
+
+<p>Functions need not return a value; in that case, their return type would be <span class="code">void</span>.</p>
+
+<p>It may not always be evident at first glance what a function is supposed to do. Any well-documented project will have <span class="keyword">function headers</span> describing the salient properties of a function in ordinary language. A good function header lists, at minimum:</p>
+
+<ul><li>the main purpose of the function</li>
+<li>the function arguments and their respective meanings</li>
+<li>the meaning of the function return value, if any</li>
+<li>any side effects caused by calling the function</li></ul>
+
+<p>Here's an example of a good function header:</p>
+
+<pre class="prettyprint code">
+/**
+ * @brief Solves the given quadratic equation.
+ *
+ * This function, given real coefficients A, B, C to the equation
+ * A*x*x + B*x + C = 0, returns the real part of a solution to the
+ * equation thus defined. Where two real solutions exist, the one
+ * closer to positive infinity is chosen.
+ *
+ * @param a the quadratic coefficient.
+ * @param b the linear coefficient.
+ * @param c the constant coefficient.
+ *
+ * @return the real part of a solution to the defined quadratic equation,
+ *         as described.
+ */
+</pre>
+
+<p><div class="points easy">1</div>In a new file <span class="code">qfsolve.cpp</span>, define a function <span class="code">qfsolve()</span> that fulfills the given function header. Prepend the header to the function definition.</p>
+
+<p><div class="points easy">1</div>Write a <span class="code">main()</span> function that tests your <span class="code">qfsolve()</span> function; i.e. come up with a collection of five or six test cases, and invoke <span class="code">qfsolve()</span> for each case, displaying the inputs and output. Include the source file with your archive submission.</p>
+
+<div class="hint">You will probably need a <span class="code">sqrt()</span> function. The C++ Standard Library defines one; you should <span class="code">#include &lt;cmath&gt;</span> so you have access to it.</div>
+
+<h4>Working with Static Arrays</h4>
+
+<p>There is only so much computation we can do with scalar quantities; many interesting problems require some sort of vector or sequence type. The static array, inherited from C++, is the simplest of these.</p>
+
+<p>An array is nothing more than a block of memory allocated for the purpose. One way to declare and use arrays is like this:</p>
+
+<pre class="prettyprint code">
+// declare an integer array of size 20
+int foo[20];
+// set every element to 0
+for (int i = 0; i &lt; 20; i++)
+{
+    foo[i] = 0;
+}
+// set some arbitrarily chosen element
+foo[7] = 42;
+
+// initializer list syntax
+// we can explicitly specify initial values here
+int bar[10] = {3, 1, 4, 1, 5, 9, 2, 6};
+</pre>
+
+<p>Arrays have the following properties:</p>
+
+<ul><li>Arrays support constant-time random access. That is, any element can be accessed by index in the same amount of time as any other element, even out of order.</li>
+<li>Arrays have a fixed size. That is, once declared, they cannot be directly resized.</li>
+<li>Every element of an array is of the same type. Types cannot be mixed in an array.</li>
+<li>Arrays have no range checking, and in fact no reliable way to query their own length, requiring that lengths be hard-coded or otherwise recorded.</li></ul>
+
+<p>We can also pass arrays as arguments to functions. We'll learn an alternative syntax for this later, but for now we'll use this syntax:</p>
+
+<pre class="prettyprint code">
+/**
+* @brief Prints out the elements of an integer array.
+*
+* @param arr the array to print
+* @param n   the number of elements in the array
+*/
+void array_print(int arr[], int n)
+{
+    for (int i = 0; i &lt; n; i++)
+    {
+        cout << arr[i] << endl;
+    }
+    cout << endl;
+}
+</pre>
+
+<p>We mark an argument as an array with empty square brackets, e.g. <span style="code">arr[]</span>. Since arrays have no inherent length, we must pass the array length as an additional argument.</p>
+
+<p><div class="points easy">1</div>In the file <span class="code">arrays1.cpp</span>, write some functions to do the following:</p>
+
+<ul><li>Given an array of integers, finds its maximum value.</li>
+<li>Given an array of integers, finds its arithmetic mean.</li>
+<li>Given an array of integers, fills it with an ascending sequence, overwriting any previous contents.</li></ul>
+
+<p>Using the code already there, demonstrate that your functions work. Include your modified code with your archive submission.</p>
+
+
+<h3>Part 2: Pointer-fu (or Common Pitfalls and How To Avoid Them)</h3>
+
+<p>While a computer program is executing, it needs a place to store information about its immediate state in a readily available place. This place is called <span class="keyword">memory</span>. This term, in particular, most commonly refers to the <span class="keyword">random-access memory</span>, or <span class="keyword">RAM</span>, present in almost all general-purpose computers available today.</p>
+
+<p>We typically measure memory size in <span class="keyword">bytes</span>. One byte is composed of eight bits; each bit can represent one of two values (0 or 1), and consequently each byte can represent any one of 256 possible values.</p>
+
+<p>Whenever we define a variable, the compiler allocates some memory to store its value. This bit of memory has an <span class="keyword">address</span>, a serial number identifying its location. Supposing we define a variable <span class="code">i</span>; then its address is denoted by <span class="code">&amp;i</span>, where <span class="code">&amp;</span> is the <span class="keyword">address-of operator</span>.</p>
+
+<p>Memory addresses don't do us any good unless we can store them. This is where pointers come in. A pointer is a variable that stores a memory address. Pointers are declared like this:</p>
+
+<pre class="prettyprint code">
+// this is a pointer to integer
+int * foo;
+</pre>
+
+<p>Notice the <span class="code">*</span>, which in this context marks <span class="code">foo</span> as a pointer.</p>
+
+<p>Pointers can then be populated with memory addresses, like so:</p>
+
+<pre class="prettyprint code">
+int bar;
+// set foo to point to bar
+foo = &amp;bar;
+// now foo contains the address of bar
+// which could be something like 0xff235600
+</pre>
+
+<p>Once a pointer is populated with a memory address, it may be <span class="keyword">dereferenced</span> to access or modify the value to which it is pointing, like so:</p>
+
+<pre class="prettyprint code">
+bar = 10;
+// *foo : dereference foo
+cout << *foo << endl;  // prints 10
+*foo = 12;             // bar now contains 12
+cout << bar << endl;   // prints 12
+</pre>
+
+<p>Pointers also support <span class="keyword">pointer arithmetic</span>, which allows adjacent memory to be accessed. For instance:</p>
+
+<pre class="prettyprint code">
+int arr[5] = {3, 1, 4, 1, 5};
+int * p = &amp;arr[0];
+// *p == 3
+p++; // increment the POINTER
+// p == &amp;arr[1], *p == 1
+cout << *(p+3) << endl;  // prints 5
+</pre>
+
+<div class="hint">Be aware that pointer arithmetic adds and subtracts by
+multiples of the pointer base type; that is, adding 1 to an
+<span class="code">int</span> pointer really adds 4 bytes
+(<span class="code">sizeof(int)</span>) to the memory address contained
+within.</div>
+
+<h4>Declaring pointers</h4>
+
+<p>One common mistake involves pointer declarations and how the
+<span class="code">*</span> character is interpreted: It is grouped with the
+variable name, <i>not</i> the type at the beginning of the line.</p>
+
+<pre class="prettyprint code">
+int * a;     // `a` is a pointer to an int
+int b;      // `b` is an int
+int * c, d;  // `c` is a pointer to an int, but `d` is an int!
+</pre>
+
+<div class="quote">What do you think the notation for a pointer to a pointer
+would look like? What does a pointer to a pointer even <i>mean</i>?</div>
+
+<p><div class="points easy">0.5</div>In the <span class="code">pointers</span>
+directory, correctly declare all the pointers used in
+<span class="code">pointers1.cpp</span> at the beginning of the
+<span class="code">main</span> function and on a single line.
+
+<h4>Uninitialized pointers and <span class="code">nullptr</span></h4>
+
+It is sometimes useful to have a "pointer to nothing": a pointer with a special value that does not correspond to any location in memory. In C and C++, you can get this by setting your pointer to <span class="code">NULL</span>. However, in C++11 and later, it is recommended to use <span class="code">nullptr</span> instead of <span class="code">NULL</span>.
+
+<pre class="prettyprint code">
+int * p = nullptr;  // `p` is initialized to a special "nothing" value
+</pre>
+
+<p>If you declare a pointer without initializing it, then its value is undefined. Its value <i>might</i> be <span class="code">nullptr</span>, but you cannot assume that. This is a common mistake when determining if it is safe
+to free allocated memory.
+
+<pre class="prettyprint code">
+int * p;  // `p` is declared but not initialized
+          // The value of `p` is undefined
+          // You cannot not assume that `p` is `nullptr`
+</pre>
+
+<p><div class="points easy">0.5</div>In the <span class="code">pointers</span>
+directory, fix any errors like this one in
+<span class="code">pointers2.cpp</span>. In a comment inside the
+<span class="code">main</span> function, explain the error that was made, and
+how and why you fixed it.</p>
+
+<h4>Pointer "entanglement"</h4>
+
+<p>Change one pointer to a memory location, and all other pointers to that
+location change, too! This statement might seem obvious, since it follows
+directly from the nature of pointers, but it is often less obvious in code
+(especially your own).</p>
+
+<p><div class="points easy">0.5</div>What is going wrong in
+<span class="code">pointers/pointers3.cpp</span>? Fix the error; then, in a
+comment inside the <span class="code">main</span> function, explain the error
+that was made, and how and why you fixed it.</p>
+
+<h4>Typecasting <i>vs.</i> address-of</h4>
+
+<p>In lecture, you should have seen examples of <b>typecasting</b>, or
+converting a variable from one type to another. For example:</p>
+
+<pre class="prettyprint code">
+int a = 5;
+float b = (float) a;  // now b = 5.0
+
+char c = 'q';
+int d = (int) c;  // now d = 113
+</pre>
+
+<p>You can also cast to pointer types. There is a difference between casting
+to a pointer type and taking the address of a variable, however!</p>
+
+<p><div class="points easy">0.5</div>What is going wrong in
+<span class="code">pointers/pointers4.cpp</span>? Fix the errors; then, in a
+comment inside the <span class="code">main</span> function, explain the error
+that was made, and how and why you fixed it.</p>
+
+<div class="attention">Be careful not to change code between the lines marked!
+We want you to fix the errors by changing the pointer mistakes, not removing
+the intentionally-problematic dereferences, etc. we've added as
+illustrations.</div>
+
+<h4>Dynamic Memory Allocation</h4>
+
+<p>As our computing requirements increase, we begin to realize a need to allocate <span class="emph">arbitrary</span> amounts of memory at runtime, without foreknowledge of how much we need. C++ provides a feature known as <span class="keyword">dynamic memory allocation</span> that allows us to request memory as we need it.</p>
+
+<p>When we declare a variable in function scope, its memory resides in an area of memory known as the <span class="keyword">stack</span>. Stack memory is cleaned up automatically when it goes out of scope. Unfortunately, stack space is limited, usually not more than a few megabytes, and so is not suitable for large amounts of data.</p>
+
+<p>Dynamic memory allocation allows memory to be requested from a different area, known as the <span class="keyword">heap</span>. Heap memory is much larger (several gigabytes on modern systems). However, heap memory is not automatically managed by C++; the programmer must request and release heap memory as needed.</p>
+
+<p>While it is possible to request singletons of primitive data types, this is usually not done; heap allocation is usually reserved for struct instances, class instances, and arrays.</p>
+
+<p>Here's how we request and release memory from the heap:</p>
+
+<pre class="prettyprint code">
+struct Foo { ... };
+
+// instantiate a new Foo
+Foo * f = new Foo;
+
+// instantiate an array of ints
+size_t len = 16777216;
+int * arr = new int[len];
+
+// ... do some stuff ...
+
+// free the Foo instance
+delete f;
+
+// free the array; notice square brackets
+delete[] arr;
+</pre>
+
+<p><div class="points easy">1</div>Go ahead and copy <span class="code">arrays1.cpp</span>, with the functions you wrote earlier, to a new file <span class="code">arrays2.cpp</span>; you will include this file with your submission. Modify your functions so that they take pointers instead of arrays, and change <b>all</b> your notation accordingly. (If you need a reminder, see the slides on pointer-array equivalency.)</p>
+
+<p><div class="points easy">1</div>Change the test code to use dynamic memory allocation instead of static allocation. Test your functions on some very large dynamically allocated arrays (at least 1 million integers); for fun, see how large you can make your test arrays without running out of memory.</p>
+
+
+<h3>Part 3: Basic Object-Oriented Design</h3>
+
+<h4>Classes</h4>
+
+<p>C++ extends the struct mechanism inherited from C by introducing the notion of <span class="keyword">classes</span>. Classes provide member variables, member functions, abstraction, inheritance, and polymorphism, among other features.</p>
+
+<p>Here's an example of a partial class definition along with some instantiations:</p>
+
+<pre class="prettyprint code">
+// vector2.hpp
+
+/**
+* @brief A two-dimensional vector class.
+*/
+class Vector2
+{
+private:
+    double x; /**&lt; the horizontal component **/
+    double y; /**&lt; the vertical component **/
+public:
+    Vector2();
+    Vector2(double m, double n);
+    ~Vector2();
+    double GetX();
+    double GetY();
+    void SetX(double val);
+    void SetY(double val);
+
+    double GetLength();
+};
+
+// vector2.cpp
+
+/**
+* @brief Constructs a new zero-length vector.
+*/
+Vector2::Vector2()
+{
+    x = 0;
+    y = 0;
+}
+
+/**
+* @brief Constructs a new vector with known elements.
+*/
+Vector2::Vector2(double m, double n)
+{
+    x = m;
+    y = n;
+}
+
+/**
+* @brief Gets the x-coordinate of this vector.
+*/
+double Vector2::GetX()
+{
+    return x;
+}
+
+/**
+* @brief Sets the x-coordinate of this vector.
+*/
+void Vector2::SetX(double val)
+{
+    x = val;
+}
+
+// ... and so forth ...
+
+// let's instantiate some vectors
+Vector2 a; // zero vector
+Vector2 b(3, 5); // vector [3, 5]
+Vector2 c = Vector2(6, 8); // vector [6, 8]
+
+// now some dynamically allocated vectors
+Vector2 * m = new Vector2(); // zero vector
+Vector2 * n = new Vector2(8, 6); // vector [8, 6]
+</pre>
+
+<p>Just like structs, classes can have member variables. Unlike structs in C, though, classes in C++ can also have member functions, which are functions that implicitly take a class instance as an argument. We can specify visibility for these variables:</p>
+
+<ul><li>public: accessible everywhere</li>
+<li>protected: accessible from class and derived classes only</li>
+<li>private: accessible from class only</li></ul>
+
+<p>The purpose of specifying visibility is to facilitate <span class="keyword">abstraction</span>. Consider the case, for instance, where we are providing a module for someone else to use. If we need to expose our module's internals to its users, then any major changes to how we handle data internally will cause huge problems for the people using it. However, if we hide the internals, and provide consistent <span class="keyword">APIs</span> in the form of function calls, then changes to the module can occur independently of the module's users.</p>
+
+<p>Every C++ class has two special kinds of functions: <span class="keyword">constructors</span> and <span class="keyword">destructors</span>. Constructors are called when an object is instantiated, and destructors are called when an object is deleted or goes out of scope. Constructors are usually used to initialize member variables either to known values or to values passed in as constructor arguments; their function name is equal to the class name, and they return nothing (not even <span class="code">void</span>!!). Destructors are usually used to clean up any memory or other resources held by an object; their function name is equal to the class name prefixed by a tilde, and, like constructors, they also return nothing at all.</p>
+
+<p>C++ allows classes to derive from base classes, inheriting their public and protected members, through the <span class="keyword">inheritance</span> mechanism; pointers to derived classes can be transparently cast to pointers to base classes. Additionally, C++ allows member functions to be marked as <span class="keyword">virtual</span> functions, allowing their behavior to be overriden by derived classes; through the <span class="keyword">polymorphism</span> mechanism, pointers to base classes, when used to call virtual functions, will transparently call the correct version of the function depending on what class of object is actually being pointed to.</p>
+
+<h4>Exercise: Tic-Tac-Toe</h4>
+
+<p>In this exercise, you'll be programming a simple game from scratch; namely, a game of tic-tac-toe. The catch is, you'll be doing it in an object-oriented fashion.</p>
+
+<p>For this exercise, you'll be working in the <span class="code">tictactoe</span> directory. You'll notice we've put some empty files there for you, as well as a Makefile. You'll populate, at least, these empty files, and possibly more depending on how you decide to do your architecture.</p>
+
+<p>A minimal, <span class="emph">incomplete</span> architecture outline for this exercise might look like this:</p>
+
+<ul>
+    <li>a Board class, representing the game board</li>
+    <ul>
+        <li>member variables</li>
+        <ul>
+            <li><span class="code">squares</span> - stores occupancy data for this board</li>
+        </ul>
+        <li>member functions</li>
+        <ul>
+            <li><span class="code">Query()</span> - given board coordinates, return a square state (unoccupied, X, O)</li>
+            <li><span class="code">Place()</span> - given board coordinates and a piece type, places a game piece onto the board</li>
+            <li><span class="code">CheckWin()</span> - returns which player won, if any</li>
+            <li><span class="code">CheckDraw()</span> - returns whether the game has ended in a draw</li>
+        </ul>
+    </ul>
+    <li>a Game class, holding the game state</li>
+    <ul>
+        <li>member variables</li>
+        <ul>
+            <li><span class="code">board</span> - the game board instance for this game</li>
+            <li><span class="code">turn</span> - whose turn is it to play</li>
+        </ul>
+        <li>member functions</li>
+        <ul>
+            <li><span class="code">Run()</span> - sets up and plays a single session of Tic-Tac-Toe</li>
+        </ul>
+    </ul>
+</ul>
+
+<p>You are free to make your class hierarchy more elaborate than this if you like, but you should have at least these two classes. The <span class="code">main()</span> function should invoke your <span class="code">Game::Run()</span> function as part of its operation.</p>
+
+<p>To take user input, you can use <span class="code">cin</span>. For instance, to read in an integer value:</p>
+
+<pre class="prettyprint code">
+int choice;
+
+cout << "Enter your answer: " << endl;
+cin >> i;
+</pre>
+
+<p><div class="points easy">3</div>Your implementation should satisfy the following specifications:</p>
+
+<ul><li>This is a two-player game played on a 3x3 board.</li>
+<li>Input and output should be handled from the command prompt. For this assignment, you may assume all input is valid, though this is generally a dangerous assumption to make.</li>
+<li>Two humans should be able to play interactively, in a "hot seat" mode. That is, both players use the same computer, while taking turns.</li>
+<li>The X player should always go first.</li>
+<li>Play should alternate between players, with each player placing one symbol in an empty square per turn.</li>
+<li>The first player to place three symbols in a row wins.</li></ul>
+
+<p>To achieve full credit, your source code must be completely documented. That is:</p>
+
+<ul><li>Every function should receive a function header. At an absolute minimum, each function header should contain a brief English description of the function in question, as well as descriptions of any parameters, return values, and side effects.</li>
+<li>Every class should receive a class header. At an absolute minimum, each class header should contain a brief English description of the class in question: what it is, and what its purpose is.</li>
+<li>Any non-trivial code should be annotated with descriptions of what is happening. These should complement and explain the code, <span class="emph">not</span> merely mirror it. Observe that your definition of 'non-trivial' may not be equivalent to ours!</li></ul>
+
+<p>Leave your code in the <span class="code">tictactoe</span> directory and include it with your archive submission.</p>
+
+<h4>Exercise: Meta-Tic-Tac-Toe</h4>
+
+<div class="attention">This part is more time-consuming. Complete it only if you have time.</div>
+
+<p>Meta-tic-tac-toe is a variation on tic-tac-toe played on a 3x3 grid of tic-tac-toe boards. The rules are as follows:</p>
+
+<ul><li>This is a two-player game.</li>
+<li>The X player always receives priority first.</li>
+<li>Every turn, the player with priority places one symbol on an open square on the active board. The active board is then switched to the board corresponding to the square on which the symbol has placed.</li>
+<ul><li>In other words, if the O player places an O on the top-right square of some board, then the top-right board becomes active.</li></ul>
+<li>Priority is passed to the other player after the player with priority has moved and the active board has switched.</li>
+<li>If the active board has no legal moves, or no moves have yet been made, the player with priority may play on any board.</li>
+<li>If a player achieves three in a row on an individual board, the board itself becomes marked with that player's symbol. Moves may still be made on a board that has been thusly marked, but additional three-in-a-rows by either player will have no effect.</li>
+<li>If three boards in a row have been marked with a single player's symbol, that player wins the game.</li>
+<li>If no legal moves remain, the winner is the player that has successfully marked more boards. If neither player has marked more boards than the other in this situation, then the game is a draw.</li></ul>
+
+<p><div class="points hard">5</div>Implement this game in a new directory <span class="code">metatictactoe</span>. Include this directory with your archive submission. If you did a good job with the tic-tac-toe exercise, you should be able to reuse some code.</p>
+
+<div class="hint">If you have any questions about this week's assignment,
+please contact cs2tas-2016@caltech.edu, or show up at any TA's office
+hours.</div>
+
+<hr />
+
+<h2>Appendix: <span class="code">struct</span> usage in C</h2>
+
+<p>C++ inherits structs from C, and additionally allows a struct defined as <span class="code">struct Foo</span> to be instantiated as type <span class="code">Foo</span>. C does not allow this: the correct typename in C is <span class="code">struct Foo</span>.</p>
+
+<p>It's tedious to type <span class="code">struct Foo</span> each time you want to instantiate a Foo, so usually C programmers will use a <span class="code">typedef</span> to allow them to use a shorter name. (The <span class="code">typedef</span> keyword exists in C++ as well, and is commonly used to shorten frequently used, otherwise lengthy template class names.)</p>
+
+<p>If you're looking at C code, or C++ code written by C veterans, you'll sometimes see one of the following idioms:</p>
+
+<pre class="prettyprint code">struct foo
+{
+
+    ...
+
+};
+
+...
+
+typedef struct foo Foo;
+
+...
+
+Foo x; /* this is valid */
+</pre>
+
+<pre class="prettyprint code">typedef struct foo /* can optionally omit the name here */
+{
+
+    ...
+
+} Foo;
+
+...
+
+Foo x; /* this is also valid */
+</pre>
+
+<p>Both are valid, but unnecessary, in C++. However, they're worth keeping in mind when moving from C++ to C, as you may in later terms.</p>
+
+</div>
+
+</body>
+
+</html>

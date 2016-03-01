@@ -1,0 +1,16 @@
+PA gene (partial, obtained from Genbank)
+H3N2: ATGGAAGACTTTGTGCGACAGTGCTTCAATCCAATGATTGTCGAGCTTGCGGAAAAGGCAATGAAAGAATATGGGGAAGATCCGAAAATCGAAACCAACAAATTTGCTGCAATATG
+H1N1: ATGGAAGACTTTGTGCGACAATGCTTCAATCCAATGATCGTCGAGCTTGCGGAAAAGGCAATGAAAGAATATGGGGAAGATCCGAAAATCGAAACTAACAAGTTTGCTGCAATATG
+      ||||||||||||||||||||*|||||||||||||||||*||||||||||||||||||||||||||||||||||||||||||||||||||||||||*|||||*||||||||||||||
+Significance: H3N2 is a strain of influenza that primarily infects pigs; only ~300 cases of human infection were recorded.
+On the other hand, H1N1 is a very common strain that is known to easily infect humans. Despite the host preferences, this
+gene is very highly conserved, suggesting it is required more for function rather than selectivity.
+
+Human 18S v. E. Coli 16S (partial; Human obtained from Genbank, E. Coli obtained from Ecocyc)
+Human  :  TCGGCCCCGCCGGG GTCGGCCCACGGCCCTGGCGGAGCGCTGAGAAGACGGTCGAACTTGACTATCTAGAGGAAGTAAAAGTCGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCA  T  T A
+E. Coli: GTGGGTTGCAAAAGAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGA TTCATGA CT G GG  GTGAA GTCGTAACAAGGTAACCGTAGGGGAACCTGCGGTTGGATCACCTCCTTA
+         t|*||***|****|*t||*||********|||***||||*||****|**||**|***|s||*|**|s||s|s||ss||*||s|||||||||||||**|||||||*||||||||||**||||||tt|tt|t|
+Significance: 18S and 16S are subunits of the ribosomal complex; in other words, these genes are responsible for coding for the machinery that
+transcribes DNA into RNA (and ultimately into protein). At first glance, we see many differences; however, towards the end we see an extremely
+large number of matches. This is no coincidence; despite how genetically different we are from bacteria, these highly conserved sequences at
+the end are crucial for protein function. 

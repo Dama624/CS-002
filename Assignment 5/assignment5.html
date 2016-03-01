@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin-top: -21px;
+        margin-left: 66px;
+        border-left: 1px solid gray;
+        padding-left: 24px;
+        margin-bottom: -15px;
+    }
+
+    div.content {
+        padding-top: 21px;
+        padding-bottom: 15px;
+    }
+
+    h1 {
+
+    }
+
+    hr {
+        color: gray;
+        background-color: gray;
+        height: 1px;
+        margin-left: -24px;
+        margin-right: -24px;
+        border: 0px solid gray;
+    }
+
+    .draft {
+        color: #008080;
+    }
+
+    table {
+        padding: 0;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    tr {
+        margin: 0;
+        padding: 2px;
+    }
+    td {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+    th {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+
+
+    span.keyword {
+        font-weight: bold;
+    }
+    span.emph {
+        font-style: italic;
+    }
+    span.deemph {
+        color: #bbbbbb;
+    }
+    span.hilite {
+        text-decoration: underline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.author {
+        float: right;
+        margin-top: 27px;
+        color: grey;
+    }
+
+    .code {
+        font-family: monospace;
+    }
+    pre code {
+        display: block;
+        background: ghostwhite !important;
+        border: 2px dashed grey !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+        padding-right: 21px !important;
+        padding-left: 21px !important;
+    }
+    div.attention {
+        background: #ffcccc;
+        border: 2px dashed red;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.quote {
+        background: #ccccff;
+        border: 2px dashed steelblue;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.hint {
+        background: #ccffcc;
+        border: 2px dashed green;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.points {
+        float: left;
+        text-align: right;
+        margin-left: -88px;
+        min-width: 50px;
+    }
+    li div.points {
+        margin-left: -128px;
+    }
+    div.points.easy {
+        color: #008000;
+    }
+    div.points.hard {
+        color: #800000;
+        font-weight: bold;
+    }
+</style>
+<title>CS2 Assignment 5: Graphs</title>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=cpp"></script>
+</head>
+
+<body>
+<div class="content">
+
+<div class="author">Author: Ben Yuan</div>
+<h1>CS2 Assignment 5: Graphs</h1>
+<h2>Due Tuesday, February 9, 2016, at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on graphs.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named <span class="code">cs2week5-[NAME].zip</span> or a tar.gz file named <span class="code">cs2week5-[NAME].tar.gz</span>, and upload it to the Week 5 assignment module on Moodle.</p>
+
+<p>Include answers to all short-answer questions in <span class="code">README.md</span>.</p>
+
+<p><div class="points hard">0</div>Remember that while you are encouraged to at least attempt the "elevated difficulty" points (as exemplified by this example paragraph), they are targeted primarily toward experienced students looking for an additional challenge. You should <span class="emph">not</span> feel obligated to complete them if you find that you are having trouble with them.</p>
+
+<p>This assignment makes extensive reference to the EVE Online world map dataset. <a href="http://evemaps.dotlan.net/">DOTLAN EveMaps</a> provides a browser-accessible version of the world map, so you have a separate copy of the dataset to reference that is not tied to whether or not your assignment is working.</p>
+
+<div class="attention"><b>Danger</b>: This assignment may end up being more difficult than previous assignments. In particular, you will be required to:
+<ul>
+<li>Read.</li>
+<ul>
+<li>In particular, read about a couple of problems set in a likely-unfamiliar domain, and 'tease out' the computer science without being bogged down by arcane flavor text.</li>
+</ul>
+<li>Understand a reasonably complex codebase.</li>
+<ul>
+<li>In particular, understand how to write your portion of code to work correctly with the rest of the framework we give you.</li>
+</ul>
+<li>Make modifications to existing code.</li>
+<ul>
+<li>We do not give you all of the methods you need. <span class="emph">This is intentional.</span> You will have to fill in anything you need that we do not provide.</li>
+</ul>
+</ul>
+</div>
+
+&nbsp;
+
+<hr />
+
+<h2>Assignment Background</h2>
+
+<p>Many problems in computer science can be expressed in the language of <span class="keyword">graphs</span>, which are structures consisting of <span class="keyword">vertices</span> and <span class="keyword">edges</span> connecting vertices. In formal language, a graph is a collection <span class="code">G = (V, E)</span> consisting of a set of vertices <span class="code">V</span> and a set of edges <span class="code">E</span>. Edges are defined as ordered pairs <span class="code">e := (v1, v2)</span> of the vertices they connect.</p>
+
+<p>Graphs can either be <span class="keyword">directed</span> or <span class="keyword">undirected</span>. In other words, edges may be treated as one-way or as two-way. Which treatment is used depends on the nature of the data being represented and on the problem being considered. Note that an undirected graph is equivalent to a directed graph containing edge <span class="code">(v2, v1)</span> for every edge <span class="code">(v1, v2)</span> in the graph.</p>
+
+<p>Edges can have labels assigned to them. Most commonly, edge labels are used for <span class="keyword">edge weights</span>, which are used by some algorithms that expect a cost for each edge. Observe that costs may sometimes be negative depending on the problem; some algorithms are designed for only non-negative edge weights, so be careful when applying them. You won't have to worry about negative edge weights for this assignment.</p>
+
+<p>There are two main ways that graphs are represented: <span class="keyword">adjacency lists</span> and <span class="keyword">adjacency matrices</span>. An adjacency list is a data structure assigning, to each vertex <span class="code">u</span>, a list of directly connected vertices <span class="code">v</span> for which the edge <span class="code">(u, v)</span> exists. An adjacency matrix is a data structure assigning, in matrix form, a value to each possible ordered pair of vertices depending on whether or not an edge exists between them; each row and each column represents a vertex in the graph.</p>
+
+<p>The adjacency-matrix representation has some useful properties - for instance, testing whether or not two vertices are connected may be done in constant time, and inverting all of the edges of a graph is as simple as taking the transpose of the matrix. Some graph algorithms are specifically formulated with adjacency matrices in mind, e.g. the Floyd-Warshall algorithm for all-pairs shortest paths. Additionally, on an unweighted graph, the adjacency matrix can be compactly represented as a sequence of individual bits. However, an adjacency list performs much better space-wise in a sparse graph with few edges. Additionally, in an object-oriented environment, information about edges is often stored naturally with the "vertex" items themselves, in a fashion directly analogous to an adjacency list. We will use that approach in the setup of this assignment.</p>
+
+<p>There are several standard problems that can be considered on any graph. We'll list a few here: </p>
+
+<p>
+<ul>
+    <li>Graph searching: we want to search a particular graph for a specific node or nodes defined by a certain property. You've already seen <span class="keyword">depth-first search</span> and <span class="keyword">breadth-first search</span> in an earlier assignment applied to trees; the same algorithms work with general graphs, with minor modifications.</li>
+    <li>Spanning tree: specifically, we often want to find the <span class="keyword">minimum spanning tree</span> of a particular graph; that is, the tree of minimum total weight that includes all the nodes. This is of particular use in networking, where routers want to ensure that they never route packets in a circle.</li>
+    <li>Single-source shortest path: sometimes we want to find the <span class="keyword">shortest path</span> from one node to another. We're particularly interested in an efficient solution, since this is such a common problem - everything from computer networking to robot pathfinding needs a good solution to this problem.</li>
+    <li>All-pairs shortest path: sometimes we're interested in the shortest paths between all pairs of nodes. If we have storage space to spare and are doing lots of path calculations over a static graph, we can run such an algorithm once and get fast answers for individual shortest-path queries afterwards.</li>
+    <li>Maximum flow: instead of weights to edges, we attach capacities, then see how much flow can be carried from one node to another. Equivalent to the minimum-cut problem, which asks how little total edge weight we can remove to divide a graph into two pieces.</li>
+    <li>Traveling salesman problem: given a list of destinations, we want to visit all of them in the most efficient way possible. This is a classic NP-complete problem; an efficient solution to this question would revolutionize computer science, far beyond its obvious applications to supply and transportation logistics, as it can be shown that a fast solution to this problem implies a fast solution to any one of a huge basket of useful but hard problems; this'll be discussed at length in CS21.</li>
+</ul>
+</p>
+
+<p>For this assignment, we'll be asking you to reason through, and implement, a minimum-spanning-tree algorithm and a single-source shortest path algorithm. We'd love to walk you through the others, but that would make this assignment too long! You'll see graph algorithms again in much more detail in Ma/CS6 (if you haven't taken it yet) and in CS38 (if you're taking this course first).</p>
+
+<hr />
+
+<h2>Prerequisites</h2>
+
+<p>These are the prerequisites for getting this assignment to compile (ubuntu package names):</p>
+<ul><li>g++ 4.6.x+</li>
+<li>libgl1-mesa-dev (OpenGL)</li>
+<li>libglu1-mesa-dev (GLU)</li>
+<li>freeglut3-dev (GLUT)</li>
+<li>libsqlite3-dev (SQLite 3)</li>
+<li>libsdl1.2-dev (SDL 1.2)</li>
+<li>doxygen (Doxygen)</li></ul>
+<p>Ask a TA if you need help retrieving these packages, or if these packages appear to be missing from the CS cluster.</p>
+
+<p>Because this assignment relies on 3D rendering for its visualization component, you may run into performance issues if you are trying to run it in a virtualized environment. To test whether 3D rendering is available at all, try running <span class="code">glxgears</span> (available in the Ubuntu package <span class="code">mesa-utils</span>). If you are using Oracle VM VirtualBox, you can try to enable 3D acceleration for the VM, which may increase performance (but is experimental and may have unanticipated side effects).</p>
+
+<p>If you can't get 3D rendering to work, or working with it is too confusing for some reason, you can build a non-graphical version of this assignment. Wherever you would run <span class="code">make</span>, run <span class="code">make CFLAGS=-DNO_GFX</span> instead. Make modifications to the non-graphics test code in <span class="code">src/graphs.cpp</span>.</p>
+
+<p>(Those of you interested in real-time scientific visualization might find the OpenGL code to be of interest. You'll see OpenGL again in CS171.)</p>
+
+<div class="attention">Make sure you have a good handle on the assignment background and the concepts referenced before proceeding.</div>
+
+<h2>Assignment (20 points)</h2>
+
+<p>You can do the three main parts of this assignment in any order. Place all your short-answer responses in <span class="code">README.md</span>.</p>
+
+<h3>Part -1: Before you proceed</h3>
+
+<h4>(New?) Tools: doxygen</h4>
+
+<p>This assignment comes with a fairly extensive prewritten codebase. To help you navigate it, we ensure that our code documentation is compatible with the Doxygen automatic documentation generator.</p>
+
+<p><div class="points easy">0</div>Run <span class="code">doxygen</span> (or <span class="code">make docs</span>) in the assignment directory. (If you are on the cluster, run <span class="code">/cs/courses/cs2/doxygen/bin/doxygen</span> instead, and/or change the makefile's DOCGEN variable accordingly.)</p>
+
+<p>Then navigate to <span class="code">doc/html</span> in a file manager and open <span class="code">index.html</span>. Have a look around, and feel free to refer back to these pages if you want to know at a high level what's going on.</p>
+
+<p>Every so often, when you're writing your own methods, rebuild the docs. If you've been keeping Doxygen-compliant function headers, they'll show up as well.</p>
+
+<h4>Building the Assignment</h4>
+
+<p><div class="points easy">0</div>Before you proceed further, <span class="code">make</span> the main assignment. Then, run the visualizer with <span class="code">bin/graphview</span>.</p>
+
+<p>To make the code simpler, all manner of text output is printed to the terminal from which you ran the visualizer. Keep this terminal in view if you can.</p>
+
+<p>Here's an overview of the controls:</p>
+
+<ul><li>Esc: Quit.</li>
+<li>IJKL: Rotate the camera around the focus star.</li>
+<li>UO: Zoom in and out.</li>
+<li>Left-click on a star: Place or move the blue octahedron.</li>
+<li>Right-click on a star: Place or move the orange octahedron.</li>
+<li>Middle-click on a star: Change the focus star for the camera.</li>
+<li>QWEA: Change the edge cost profile (described later).</li>
+<li>Enter: Compute the shortest path from the blue to the orange marked stars.</li>
+<li>T / Shift-T: Request a MST recomputation (described later).</li></ul>
+
+<p>Verify that the visualizer builds and runs successfully before continuing.</p>
+
+<p></p>
+
+<h3>Part 0: Debugging</h3>
+
+<p><div class="points easy">3</div>Here's a code snippet. Is there anything wrong with the <span class="code">dfs()</span> depth-first search routine? If so, how would you fix it? If not, how do you know?</p>
+
+<p>True indicates that the value was found, and false indicates that the value was not found.</p>
+
+<div class="hint">Hint: make no <span class="hilite">assumptions</span> about the data structure on which you are running <span class="code">dfs()</span>.</div>
+
+<pre><code class="prettyprint">/* debugging example */
+
+// assume all necessary headers are included
+
+class Node
+{
+    int value;
+    std::vector&lt;Node*&gt; edges;
+public:
+    // insert constructors, destructors,
+    // accessors, and mutators here
+    bool dfs(int to_find);
+};
+
+bool Node::dfs(int to_find)
+{
+    if(this-&gt;value == to_find)
+    {
+        return true;
+    }
+    std::vector&lt;Node*&gt;::iterator i;
+    for(i = this-&gt;edges.begin(), i != this-&gt;edges.end(); i++)
+    {
+        Node * n = *i;
+        bool r = n-&gt;dfs(to_find);
+        if(r)
+        {
+            return r;
+        }
+    }
+    return false;
+}
+
+</code></pre>
+
+<h3>Part 1: Minimum Spanning Trees</h3>
+
+<p>You are an agent of the Caldari State tasked with overseeing stargate construction. A company called Caldari Constructions has recently devised a new kind of high-velocity stargate. While expensive to construct, these gates can allow starships to jump to specific star systems from almost anywhere in the system in which they are present, effectively cutting travel costs by a factor of four.</p>
+
+<p>You're given a program that can display a three-dimensional model of all of New Eden, and you want to see what the travel network would look like if these high-velocity stargates were implemented. The problem is that the construction method for these high-velocity gates becomes linearly more expensive with the distance traveled. You want to complete as little new construction as possible while still making sure all of New Eden is connected.</p>
+
+<p>If you had more resources, you could consider trying to ensure that the new network connects all star systems even if any one link is taken out of service; this is the <span class="keyword">minimum-cost k-connected spanning subgraph problem</span>. The Caldari State can't afford this level of redundancy, though, nor does it need it: ships can still use the existing stargate network, which already spans all of accessible space.</p>
+
+<p>You don't know whether the Caldari State will limit itself to upgrading existing gates, or is planning to construct new gates where necessary. You have to be ready for either option. You can assume, though, that "supergates" constructed where normal gates don't exist don't automatically place normal gates, so a ship ignoring the supergate network won't use those new links at all.</p>
+
+<p>Before you can modify the visualization software to show the minimum spanning tree of New Eden, you have to remember (from your days studying at the Science and Trade Institute) how the algorithm works. We'll help you reason through it.</p>
+
+<h4>Short Answer</h4>
+
+<p>This section is most useful if you reason through these problems on your own, or discuss the problems lightly with a friend or TA. Try not to consult external resources for the answers. All answers you provide must be your own.</p>
+
+<p><div class="points easy">0.5</div>Before we can talk about MST algorithms, we need to pinpoint precisely what a MST is. What are the three most essential properties of a MST? Explain what each of these properties really means in terms of graphs and their properties. (Hint: it's all in the name!)</p>
+
+<p>Now that we understand the meaning of "minimum spanning tree", we can start to develop an algorithm. There are two common algorithms for this problem. We'll look at both of them.</p>
+
+<p><div class="points easy">0.5</div>Suppose we start off only with one node in our candidate tree. For the next step, we should pick an adjacent node and its edge to add to the tree. Which should we pick? Justify your answer.</p>
+
+<p><div class="points easy">0.5</div>Now we have two (or three, or N) nodes in our candidate tree. Which nodes and edges should we pick at each subsequent step, and why? How do we know when we're finished, and why? (In the literature, this method is known as Prim's algorithm.)</p>
+
+<p><div class="points easy">0.5</div>Let's look at a different algorithm. Suppose that we instead start off with a lot of candidate trees - one per node, in fact. We can join trees at will by picking edges. Which edge should we pick at each step? When do we stop? Justify your answers. (In the literature, this method is known as Kruskal's algorithm.)</p>
+
+<h4>Programming</h4>
+
+<p>In this section, you'll write an implementation of a MST algorithm of your choice.</p>
+
+<p><div class="points easy">1</div>Before you start, pick one of the algorithms you described in the short-answer section and outline it in your choice of stepwise English, Python, or other pseudocode. You should be able to refer to this outline and translate it more-or-less directly into working code.</p>
+
+<p><div class="points easy">3</div>Now open up <span class="code">src/starmap.cpp</span> in the assignment's source tree, and scroll down to <span class="code">void Starmap::generateMST(bool ignore_edges)</span>. This is the function you will need to implement. This function, when run, should find the minimum spanning tree of New Eden and store it in the <span class="code">mst_edges</span> member of every star in the MST you find. The <span class="code">ignore_edges</span> parameter specifies whether the edges that exist should be respected: if this is false, then the MST you find must contain no edges outside the edge set of the graph, but if this is true, then you must ignore the existing edges and assume that all pairs of stars are connected by edges even if this is not actually true.</p>
+
+<p>If you've done the short-answer section, you should already have an idea of how to proceed. You may implement either algorithm discussed in the short-answer section. You may also implement another algorithm if you happen to know of one; this will not yield any extra points.</p>
+
+<p>Weight your edges by distance. Stars have a function <span class="code">Star::cartesianDistanceTo(Star * dest)</span> that will get the distance to the specified star. Distance is given in world units; each world unit is equal to 10^16 meters, or a little more than a lightyear, but you may treat one world unit as exactly equal to 1 lightyear if it simplifies the problem.</p>
+
+<p>The <span class="code">ignore_edges</span> argument specifies whether your MST algorithm should ignore the pre-existing edges and calculate the MST over all pairs of stars, optimizing the tree by distance. <span class="emph">New Eden is large. Calculating the unrestricted MST on all of New Eden could take a long time!</span></p>
+
+<p>Be aware that you may need to specify a star that is contiguous with most of New Eden as a start point in order to calculate a reasonable MST. The star with the ID number 30000142 is a good choice. Notice that the <span class="code">Starmap</span> object stores stars in a <span class="code">std::map</span> keyed by star ID number.</p>
+
+<div class="attention">Do not assume that the graph given contains only one connected component. For the full dataset, this is objectively not the case.</div>
+
+&nbsp;
+
+<div class="hint">You may need to create new data structures or functions to complete this part of the assignment. In general, there are no restrictions as to what you can change in this week's template code as long as the main objectives are met.</div>
+
+<p>Observe that your MST function will need to clean up any existing MST before recalculating. This is especially important because the unrestricted MST is not necessarily a superset of the restricted MST!</p>
+
+<p>The visualizer will show off your MST, restricted to existing edges, when you start it. You can rebuild the visualizer just by running <span class="code">make</span> from the command line while in the assignment's codebase directory. You can then run the visualizer by running <span class="code">bin/graphview</span> from the same directory. While running the visualizer, you can also press IJKL to alter the azimuth/altitude of your camera, and press U and O to zoom in and out. MST edges are highlighted in blue where they coincide with existing edges, and in purple where they do not.</p>
+
+<p>To change the star your view is pivoting around, middle-click on the star you wish to change to.</p>
+
+<p>To make the calculations take less time overall, we've chosen a contiguous portion of around 360 stars for you to run your algorithms on. If you'd like to try your algorithms on all of New Eden, change the appropriate <span class="code">#define</span> in <span class="code">src/starmap.hpp</span> and do a full rebuild (<span class="code">make clean</span> followed by <span class="code">make</span>).</p>
+
+<p>To recompute a restricted MST, press the T key while the visualizer is running. To compute the full MST, which will include disconnected portions of the universe, press Shift-T; this takes a long time to compute, especially on the full dataset.</p>
+
+<p>If your visualizer is not working, then instead compute the total edge cost of the minimum spanning trees (both restricted and full) over the small dataset, and place it in <span class="code">README.md</span>.</p>
+
+<h3>Part 2: Single-Source Shortest-Path</h3>
+
+<p>You're a manufacturer of navigational computers for starship pilots in New Eden. Pilots need to know shortest paths from point A to point B all the time; pilots value efficiency and are largely uninterested in scenic routes. However, different pilots have different navigational needs.</p>
+
+<p>Every solar system has a security status assigned to it, from -1.0 to 1.0, which dictates the level of protection provided by the local authorities. Any security status above or equal to 0.5 is considered "high security", which means that the local police will respond swiftly and decisively to any criminal acts (like firing on another vessel), and the local faction naval forces will chase known outlaws and engage them on sight. Any security status below 0.5 is considered "low security", which means that the authorities will not respond to criminal acts or outlaws, although criminal acts are recorded. A security level below 0.0 is considered "zero security", which means that the authorities have no presence at all; we'll treat it as equivalent to "low security" for our purposes.</p>
+
+<p>To a scout for a military operation, security status is immaterial: a properly trained scout can evade pirates and enemy forces in low-security and zero-security space. A scout is interested only in the shortest path from A to B, without any special weighting.</p>
+
+<p>To a civilian freighter pilot, unescorted travel through low-security space spells doom. Low-security chokepoints between major trading hubs are pirate havens, and experienced freighter pilots will route around them at all costs. High-capacity freighters are slow, expensive vessels and are difficult to replace if lost.</p>
+
+<p>To a hardened outlaw, flying through high-security space is a risky venture. Outlaws are pursued relentlessly by the local faction navy in high-security space, and the police allow other pilots to shoot confirmed outlaws on sight. Outlaws do not fear the risks of low-security space and will gladly route through it.</p>
+
+<p>Your navigational software must be able to cater to these three very different markets, and you're in charge of writing the shortest-path algorithm for your company's latest model. Before you can write this algorithm, you'll need to reason through it. We'll help you out.</p>
+
+<h4>Short Answer</h4>
+
+<p>This section is most useful if you reason through these problems on your own, or discuss the problems lightly with a friend or TA. Try not to consult external resources for the answers. All answers you provide must be your own.</p>
+
+<p>We'll help you reason through a common shortest-paths algorithm known as Dijkstra's algorithm. This algorithm is the gold standard for the single-source problem; though superseded in some applications by the more sophisticated A* algorithm, Dijkstra's algorithm is still useful in cases where it is difficult to estimate the remaining distance to the goal, e.g. when edges have different weights independent of standard notions of 'distance'.</p>
+
+<p><div class="points easy">0.5</div>First, let's start off looking just at the source node. If we're trying to minimize the path length, which neighbor does it make the most sense to investigate first?</p>
+
+<p><div class="points easy">1</div>Now we have shortest paths to two nodes (or eventually three nodes, or eventually N nodes). Notice that, at least in the two-nodes case, both of these paths are shortest paths: one of them is trivial, and the other may be proven minimal by contradiction. If we're trying to minimize the path length to the goal - <span class="emph">which we have not yet found using our algorithm</span> - which node does it make the most sense to investigate at each further step? What else should we be doing at each step, if anything, to ensure that we'll end with a result that makes sense? Why does doing this end up yielding a shortest path to another node? (Does it?)</p>
+
+<div class="hint">Hint: You may need to attach some additional information to each node.</div>
+
+<p><div class="points easy">0.5</div>Suppose we've done many iterations and have now found our goal. How do we know that we're done? How can we now derive the path we want?</p>
+
+<h4>Programming</h4>
+
+<p>Now that you've reasoned through the fundamentals behind Dijkstra's algorithm, you can implement it in code.</p>
+
+<p><div class="points easy">1</div>Before you start, outline Dijkstra's algorithm in your choice of stepwise English, Python, or other pseudocode. You should be able to refer to this outline and translate it more-or-less directly into working code.</p>
+
+<p><div class="points easy">3</div>Now open up <span class="code">src/starmap.cpp</span> in the assignment's source tree, and scroll down to <span class="code">std::list&lt;Star*&gt; Starmap::shortestPath(Star * src, Star * dest, CostSpec costs)</span>. This is the function you will need to implement.</p>
+
+<p>This function declaration might be scary-looking, but it's actually not too bad: the function takes a source and destination star and a <span class="code">CostSpec</span>, which is a structure detailing the costs of all the different types of travel between stars, and returns a shortest path.</p>
+
+<div class="hint">The <span class="code">CostSpec</span> structure codifies the default costs of normal edges and MST edges, whether or not MST edges are used, and the cost multipliers applied to edges entering low-security space and high-security space. That is, if you have an edge from A to B, check B's security status to determine which multiplier is applied.<br />
+<br />
+If MST edges are enabled in the <span class="code">CostSpec</span>, and both a regular and MST edge exist between A and B, use the MST cost as the base cost. If MST edges are disabled, and both a regular and MST edge exist between A and B, use the regular cost.</div>
+
+<p>The <span class="code">CostSpec</span> structure has a couple of data fields related to direct jumps. <span class="emph">Don't worry about those</span> (unless you really want to); none of the default cost specifications use these fields. <span class="deemph">If you're interested, then the cost to any star to which no edge exists is dependent on the linear distance between them, multiplied by the scaling factor given in the CostSpec. The cost given is in cost per lightyear, but again, you can treat one world unit as exactly equal to one lightyear.</span></p>
+
+<p><div class="points hard">3</div>You'll need a way to pick stars according to some metric that will constantly be changing. There's no easy way to do this, unfortunately; not even <span class="code">std::priority_queue</span> will help you, because it doesn't support <span class="code">decreaseKey</span>. We've found that just using an <span class="code">std::vector</span> is good enough; since you're not computing lots of shortest paths, the performance penalty is not large (the algorithm takes a few seconds worst-case). However, for extra points, you can use a binary heap, Fibonacci heap, or similar data structure to make your algorithm much faster. See the relevant notes on Moodle if you want hints on how that's done.</p>
+
+<div class="hint">Notice that you <span class="emph">will</span> need to add some functions and member variables in order to implement Dijkstra's algorithm successfully. Don't be afraid to switch things around!</div>
+
+<p><div class="points hard">2</div>Why stop at Dijkstra's algorithm, though? There are a number of shortest-path algorithms out there. If you implement another shortest-path algorithm alongside Dijkstra's algorithm and can somehow switch between them (e.g. with a preprocessor toggle), you can earn up to two extra points.</p>
+
+<p>In any case, you'll need to return a <span class="code">std::list</span> listing out the stars in your supposed shortest path. Take advantage of the fact that you can add to lists on either end. The visualizer will take the list you return and go through all the stars within, drawing out your path on the screen.</p>
+
+<p>The visualizer will test out your code at startup and try to find a shortest path between Itamo and Jakanerva (chosen more-or-less arbitrarily). You can compute your own shortest paths. Left-click on any star to set the source (blue octahedron), and right-click on any star to set the destination (orange octahedron). Then press ENTER to compute a path.</p>
+
+<p>To change the cost specification, press Q for a military scout, W for a civilian freighter (avoid lowsec), and E for an outlaw (avoid highsec). Press A to toggle the use of the MST edges, if you've computed them; four MST edges have the same cost as a normal edge.</p>
+
+<p>Notice that we're putting lots of output to the terminal, but you should still input keyboard shortcuts to the rendering window itself.</p>
+
+<p>If your visualizer is not working, then instead verify that your code produces paths that correspond to the following test cases. The only thing you will need to change in the <span class="code">CostSpec</span> for these test cases is the multipliers.</p>
+
+<h4>Test Cases</h4>
+
+<p>Note that your paths may be different from ours depending on the order in which you consider edges. Note also that your path may be different from those provided by other utilities, like the EVE Online official client. Observe that these test cases were calculated on the full dataset.</p>
+
+<h5>Itamo (30000119) to Jakanerva (30000148) (Avoid Lowsec x20 No MST)</h5>
+<p>Itamo, Maurasi, Jita, New Caldari, Josameto, Poinen, Nomaa, Saisio, Jakanerva (8 jumps, cost: 8000)</p>
+
+<h5>Itamo (30000119) to Jakanerva (30000148) (Avoid Highsec x20 No MST)</h5>
+<p>Itamo, Maurasi, Perimeter, Iyen-Oursta, Ignoitton, Carrou, Bamiette, Artisine, Olettiers, Crielere, Rancer, Miroitem, Thelan, Hagilur, Anher, Evati, Todifrauan, Akkio, Otosela, Tasti, Messoya, Akora, Reisen, Ikami, Hampinen, Jakanerva (25 jumps, cost: 158000)</p>
+
+<h5>Itamo (30000119) to Jakanerva (30000148) (All Restricted MST)</h5>
+<p>Itamo, Maurasi, Perimeter, Urlen, Sirppala, Inaro, Sirseshin, Tuuriainas, Geras, Nomaa, Saisio, Jakanerva (11 jumps)</p>
+
+<p>Notice that in this case, even the avoid-highsec routine follows the restricted MST almost exactly when allowed to use it. Can you pinpoint why?</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Shortest No MST)</h5>
+<p>Jita, Perimeter, Iyen-Oursta, Faurent, Ambeke, Crielere, Rancer, Miroitem, Otou, Hek (9 jumps, cost: 9000)</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Shortest Restricted MST)</h5>
+<p>Jita, Perimeter, Iyen-Oursta, Faurent, Ambeke, Crielere, Rancer, Miroitem, Lamadent, Otou, Hek (10 jumps, cost: 4750)</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Avoid Lowsec x20 No MST)</h5>
+<p>Jita, Perimeter, Urlen, Kusomonmon, Suroken, Haatamo, Uedama, Sivala, Hatakani, Tennen, Unel, Auberulle, Adiere, Stetille, Doussivitte, Parchanier, Augnais, Deltole, Colelie, Bei, Uttindar, Hek (21 jumps, cost: 21000)</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Avoid Lowsec x20 Restricted MST)</h5>
+<p>Jita, Perimeter, Sirppala, Anttiri, Suroken, Haatamo, Uedama, Sivala, Iivinen, Tennen, Unel, Auberulle, Adiere, Stetille, Doussivitte, Parchanier, Fluekele, Jolia, Augnais, Deltole, Colelie, Bei, Uttindar, Hek (25 jumps, cost: 9250)</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Avoid Highsec x20 No MST)</h5>
+<p>Jita, Perimeter, Iyen-Oursta, Ignoitton, Carrou, Bamiette, Artisine, Olettiers, Crielere, Rancer, Miroitem, Otou, Hek (12 jumps, cost: 69000)</p>
+
+<h5>Jita (30000142) to Hek (30002053) (Avoid Highsec x20 Restricted MST)</h5>
+<p>Jita, Perimeter, Iyen-Oursta, Ignoitton, Carrou, Bamiette, Artisine, Olettiers, Crielere, Rancer, Miroitem, Thelan, Hagilur, Anher, Evati, Lasleinur, Arnher, Egmar, Orfrold, Klogori, Hadozeko, Resbroko, Amo, Hror, Hek (24 jumps, cost: 42250)</p>
+
+<p>Notice that in this case, allowing the use of the restricted MST with a 20x penalty on highsec systems causes the navigation software to insert a large detour near the very end that may not make any sense at all upon casual inspection. Can you pinpoint why it's doing this?</p>
+
+<h3>Part X: Miscellaneous Items</h3>
+
+<h4>Food for Thought</h4>
+
+<p>Graphs describe many types of relations - for instance, the Internet and social networks. Many real-world graphs have particular properties: a very large strongly connected component (for which a directed path exists between each pair of vertices), a small diameter (largest distance between any two points), a heavy-tailed degree distribution (polynomial falloff), and a high clustering coefficient (proportion of triangles to connected triplets). If you want to, you can consider how these properties apply to examples closer to home, like social networks; you'll revisit these properties at length in CS144.</p>
+
+<p><div class="points hard">3</div>Writing your own code (either standalone, or by modifying the existing framework), run the following calculations on the main connected component of the New Eden graph containing Jita (30000142):</p>
+<ul>
+    <li>Find the diameter. That is, find the distance - in number of edges - between the pairs of nodes that are farthest from each other. Do not include the MST in this calculation, and ignore any infinities.</li>
+    <li>Plot the degree distribution on a log-log scale. That is, plot the distribution of the number of outgoing edges each node has. Again, do not include the MST. (You can dump this data to a file first using your own code; then, you can use a plotting tool of your choice to plot the data.)</li>
+    <li>Find the overall clustering coefficient. That is, find the ratio between the number of existing triangles times 3 and the number of connected triplets in the graph. Again, do not include the MST. (Any three nodes ABC form a connected triplet if WLOG edges AB and BC exist; if edge AC exists as well, the three nodes form a triangle.)</li>
+</ul>
+<p>What do you find? Speculate on the significance of your findings. Include your code with your submission. If you want to write separate analysis code and don't want to learn SQLite, you might find the CSV files in <span class="code">export/</span> helpful.</p>
+
+<p><div class="points hard">1</div>Jita is the largest trade hub in New Eden, processing more volume each day than all of the other major trade hubs combined. How might a trade hub like this arise? Is there anything special about the New Eden graph that would enable Jita to become the 'center of the universe'? If not, what might be some of the other social, historical, or gameplay-related factors that cause Jita to remain so economically important? Feel free to speculate; there is no single right answer.</p>
+
+<h4>Feedback</h4>
+
+<p><div class="points easy">2</div>Answer the following short-answer questions and we'll give you free points.</p>
+
+<p>How experienced do you consider yourself? Was CS1 your first exposure to programming, or have you been programming for years? Are you following everything this course is throwing at you, or are you completely lost?</p>
+
+<p>What, if anything, has been hard about adopting C++ as a working language? How do you think we can best help you?</p>
+
+<p>How long did you spend on this assignment? How much of that time was spent trying to figure out how to use obscure C++ things? How much of that time was spent trying to understand the basic concepts of this week's work?</p>
+
+<p>Of the preceding four assignments, which one took you the most time, and which one took you the least? Which one gave you the most trouble, and why?</p>
+
+<p>A number of assignments have asked you to outline an algorithm before writing code. Did writing the outlines help you write the code? Did you write the outlines before or after you wrote the code? Do you think we should continue to require outlines? Do you think we should continue to give points for outlines?</p>
+
+<p>How did you like this assignment? Was it interesting? Was it too easy? Too hard? Do you think it covered the concepts adequately? What did you like, and how do you think we could have done even better? Do you feel that this assignment has made you a better programmer? How could we have done that better?</p>
+
+<p>The recitation preceding this assignment should have covered some of the important concepts needed to do this assignment. Did you go to that recitation? Did you find it useful? Was the TA sufficiently prepared? How could that recitation section have been improved?</p>
+
+<p>One or more lectures preceding this assignment should have addressed the conceptual material covered by this homework. Did you attend those lectures? Were they useful? Was the lecturer clear and sufficiently prepared? How could those lectures have been improved?</p>
+
+<p>Is this course living up to your expectations? What do you like about the course? What can we adjust to make this course even better?</p>
+
+<p>&nbsp;</p>
+
+<p>If you have any questions about this week's assignment, please contact &lt;cs2tas-2016@caltech.edu&gt;, or show up at any TA's office hours.</p>
+
+</div>
+
+
+
+</body>
+
+</html>

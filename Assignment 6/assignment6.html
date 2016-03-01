@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin-top: -21px;
+        margin-left: 66px;
+        border-left: 1px solid gray;
+        padding-left: 24px;
+        margin-bottom: -15px;
+    }
+
+    div.content {
+        padding-top: 21px;
+        padding-bottom: 15px;
+    }
+
+    h1 {
+
+    }
+
+    hr {
+        color: gray;
+        background-color: gray;
+        height: 1px;
+        margin-left: -24px;
+        margin-right: -24px;
+        border: 0px solid gray;
+    }
+
+    .draft {
+        color: #008080;
+    }
+
+    table {
+        padding: 0;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    tr {
+        margin: 0;
+        padding: 2px;
+    }
+    td {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+    th {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+
+
+    span.keyword {
+        font-weight: bold;
+    }
+    span.emph {
+        font-style: italic;
+    }
+    span.hilite {
+        text-decoration: underline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.author {
+        float: right;
+        margin-top: 27px;
+        color: grey;
+    }
+
+    .code {
+        font-family: monospace;
+    }
+    pre.code {
+        background: ghostwhite !important;
+        border: 2px dashed grey !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+        padding-right: 21px !important;
+        padding-left: 21px !important;
+    }
+    div.attention {
+        background: lightcoral;
+        border: 2px dashed red;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.quote {
+        background: lightblue;
+        border: 2px dashed steelblue;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.hint {
+        background: lightgreen;
+        border: 2px dashed green;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.points {
+        float: left;
+        text-align: right;
+        margin-left: -88px;
+        min-width: 50px;
+    }
+    li div.points {
+        margin-left: -128px;
+    }
+    div.points.easy {
+        color: #008000;
+    }
+    div.points.hard {
+        color: #800000;
+        font-weight: bold;
+    }
+</style>
+<title>CS2 Assignment 6: Multithreading and concurrency</title>
+</head>
+
+<body>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=cpp"></script>
+<div class="content">
+
+<div class="author">Author: Ellen Price</div>
+<h1>CS2 Assignment 6: Multithreading and concurrency</h1>
+<h2>Due Tuesday, February 16, 2016 at 17:00 PST</h2>
+
+<hr />
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on multithreading and concurrency. This
+assignment consists of a debugging exercise, a warm-up exercise,
+and a practical application exercise.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named
+<span class="code">cs2week6-[NAME].zip</span> or a tar.gz file named
+<span class="code">cs2week6-[NAME].tar.gz</span>, and upload it to the
+Week 6 assignment module on Moodle.</p>
+
+<h2>Assignment Background</h2>
+
+<h3>The Dining Philosophers problem</h3>
+
+<div class="attention">This is a very famous problem in computer science,
+so there are many solutions available online. <b>You should not need
+to access outside information about the dining philosophers problem in
+order to complete the assignment. This includes both discussions of
+theory and source code written by others.</b> As always, consulting man
+pages or other C++ language resources is acceptable.</div>
+
+<p>A simple and thorough problem statement for the dining philosophers
+is quoted here from the Wikipedia article.</p>
+
+<div class="quote">
+<p>Five silent philosophers sit at a table around a bowl of spaghetti.
+A fork is placed between each pair of adjacent philosophers.</p>
+<p>Each philosopher must alternately think and eat. However, a
+philosopher can only eat spaghetti when he has both left and right forks.
+Each fork can be held by only one philosopher and so a philosopher can
+use the fork only if it's not being used by another philosopher. After
+he finishes eating, he needs to put down both forks so they become
+available to others. A philosopher can grab the fork on his right or
+the one on his left as they become available, but can't start eating
+before getting both of them.</p>
+<p>Eating is not limited by the amount of spaghetti left: assume an
+infinite supply.</p>
+<p>The problem is how to design a discipline of behavior (a concurrent
+algorithm) such that each philosopher won't starve; i.e., can forever
+continue to alternate between eating and thinking assuming that any
+philosopher cannot know when others may want to eat or think.</p>
+</div>
+
+<p>Depending on the algorithm, the system may experience deadlock
+(a state from which no progress can be made) or not. Any valid solution
+will allow all the philosophers to eat, though that may only occur
+after an arbitrarily long time. We may want to prevent starvation,
+which could occur if, for example, one philosopher gets to eat once for
+every five times the others do (we assume that the philosophers are
+identical and require the same amount of spaghetti to function). We
+will explore a few scenarios in this assignment.</p>
+
+<p>The dining philosophers problem is obviously an abstract problem, but
+it does have practical applications. You could replace the forks by
+any shared resource &mdash; hard drives, printers, etc. &mdash; and the
+philosophers could be replaced by any processes competing for those
+resources.</p>
+
+<h3>What is raytracing?</h3>
+
+<p>Some tasks are prohibitively slow even when implemented in a compiled
+language like C++; one example is raytracing, and a common solution
+to this problem is multithreading.</p>
+
+<p>We will <i>not</i> be asking you to write a raytracer in this
+assignment, but you should understand how the process works in general.
+<b>Please note that the images below are shamelessly taken from
+<a href="http://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html">Ray
+Tracing: Graphics for the Masses</a>.</b> How will we represent the real
+world in a graphics-friendly way? One way is to define a single point
+for an "eye" (the viewer) and a plane surface for the viewport (what you
+see on your screen). Then a pixel on the viewport is colored according to
+what a ray from the eye through that viewport pixel would see. In the
+"world," we define objects (spheres, planes, etc.) and lights (which
+illuminate the objects but cannot be seen themselves).</p>
+
+<center><img src="images/eye_window.jpg" /></center>
+
+<p>The natural question to ask now is, how do we know what color that
+pixel should be at all? Enter raytracing. A naive approach to this
+problem would be to define every possible ray extending from every light,
+check whether it intersects an object, and, if it does, check if the
+reflection will hit the viewport. This is a very bad idea! All the rays
+that didn't intersect an object or the viewport will be deleted, so
+there was no point in calculating them anyway. A scheme like this
+is visualized in the figure below. See all the wasted rays?</p>
+
+<center><img src="images/naive_raytracing.jpg" /></center>
+
+<p>Clearly, this is not the best way to proceed. What if we work the
+problem backwards? Trace every ray from the eye through the viewport;
+if a ray intersects an object, check to see if light would illuminate
+that point and, if so, color the viewport accordingly. All of <i>those</i>
+rays must intersect the viewport, which means much less waste (compare
+the image below with the previous one). This should give you a basic
+idea of how the provided raytracer works. If you're more curious
+you can look at
+<a href="http://www.cs.cornell.edu/courses/cs4620/2011fa/lectures/08raytracingWeb.pdf">
+Cornell's Raytracing Basics</a>.</p>
+
+<center><img src="images/smart_raytracing.jpg" /></center>
+
+<p>For a 600x800 pixel image (the size you will be using),
+you must trace a minimum of 480,000 rays from the eye to the
+viewport, not to mention determining whether light rays will
+illuminate a particular point (for N lights, you would do this N
+times for every ray that intersects an object). That's a lot of
+computation, and we can improve speed by taking advantage of
+multithreading.</p>
+
+<p>Multithreading can be used to break up a process so that independent
+parts of it can execute at the same time; in the best case scenario,
+if you have two threads executing at the same time, you could improve
+speed by a factor of two. You will see in this assignment that
+raytracing can be made significantly faster by running multiple threads
+at once.</p>
+
+<h2>Prerequisites</h2>
+
+<p><ul>
+	<li>g++ 4.6.x+</li>
+	<li>libsdl1.2-dev</li>
+    <li>libsdl-gfx1.2-dev</li>
+	<li>libxml2-dev</li>
+    <li>libncurses5-dev</li>
+</ul>
+
+Ask a TA if you need help retrieving these packages, or if these packages
+appear to be missing from the CS cluster.</p>
+
+<h2>Assignment (20 points)</h2>
+
+<p>For this assignment, you will demonstrate your debugging skills,
+solve the dining philosophers problem, parallelize a provided
+singlethreaded raytracer.</p>
+
+<h3>Part 0: Debugging</h3>
+
+<p><div class="points easy">3</div>In the file
+<span class="code">reader/reader.cpp</span>, there is an implementation
+of a queue. This queue is used to store lines of input from the terminal,
+and prints the first few lines after the end of file is reached
+(Ctrl-D from the terminal). The code does run, but it currently has
+issues with memory. Using valgrind, find and fix all memory
+issues in this code.</p>
+
+<h3>Part 1: Dining Philosophers</h3>
+
+<div class="attention">This is a very famous problem in computer science,
+so there are many solutions available online. <b>You should not need
+to access outside information about the dining philosophers problem in
+order to complete the assignment. This includes both discussions of
+theory and source code written by others.</b> As always, consulting man
+pages or other C++ language resources is acceptable.</div>
+
+<p>The full problem statement is given in the Assignment Background
+above. <b>These objectives are to be completed in the
+<span class="code">philosophers</span> directory.</b>You will be working
+with three main C++ classes: <span class="code">Fork</span>,
+<span class="code">Philosopher</span>, and
+<span class="code">TalkingPhilosopher</span>. Some of these are
+incomplete, and you will be asked to fill in specific parts to
+demonstrate two different solutions to the problem. The code that spawns
+each philosopher in a new thread and calls the correct function to
+determine his behavior is provided for you. You might be interested in using
+<span class="code">std::thread</span>, <span class="code">std::mutex</span>,
+and/or the semaphore implementation that we provide in
+<span class="code">philosophers/semaphore.h</span>.
+
+<p>To make your task easier, we have provided a simple visualizer
+for the philsophers-forks system. An example of the output is
+shown below. Forks that are unclaimed will appear between the
+philosophers; claimed forks appear under the philosopher who
+has them. The asterisk indicates a dirty fork. Remember that the
+system wraps around at the ends!</p>
+
+<img src="images/philosophers_visualizer.jpg" />
+
+<p><div class="points easy">1</div>A fork may only be used by one
+philosopher at a time. There is a concurrency primitive exactly
+suited to this scenario. Demonstrate your understanding of that
+primitive by filling in the <span class="code">Fork::pick_up()</span>
+and <span class="code">Fork::release()</span> functions. You may add
+public or private members and modify the constructor and destructor
+as you see fit.</p>
+
+<p><div class="points easy">1</div>You have been provided a guaranteed
+deadlock solution, named <span class="code">greedy</span>; run
+<span class="code">philosophers -g</span> at a terminal prompt to
+observe its behavior. In a file named <span class="code">README</span>
+in the <span class="code">philosophers</span> directory, describe in a
+few sentences the algorithm that is governing the philosophers' behavior
+and why this "solution" will always deadlock.</p>
+
+<p>One way to prevent deadlock is to limit the number of philosophers
+that can sit at the table at any one time, which limits the number that
+are competing for forks. We'll call this solution
+<span class="code">waiter</span>, since it is as if the philosophers
+must ask a waiter for permission to sit down.</p>
+
+<p><div class="points easy">1</div>Determine the maximum number of
+philosophers that can sit at the table at any one time. In the
+same <span class="code">README</span> file, give this number and
+describe how you arrived at it. This can be a logical argument &mdash;
+there is no need for a formal proof.</p>
+
+<p><div class="points easy">3</div>Using the
+<span class="code">greedy</span> solution as a guide, fill in the
+function <span class="code">waiter</span> to implement this solution.
+You may use any appropriate concurrency primitives and define any local
+or global variables you need. Again, consulting the documentation may
+be helpful. Run <span class="code">philosophers -w</span> at
+a terminal prompt to observe the behavior of your algorithm. <b>Your
+solution should not deadlock, and every philosopher should eventually
+eat, or it is not a solution.</b></p>
+
+<p>In October 1984, K. M. Chandy and J. Misra published a paper in
+<i>ACM Transactions on Programming Languages and Systems</i> (volume 6,
+number 4, pages 632-646) describing their own solution to this problem.
+It can be extended to an arbitrary number of agents (philosophers) and
+resources (forks), but it breaks the condition that the philosophers
+cannot speak to each other; it also prevents starvation. Again, the
+Wikipedia description is quite thorough, so I will quote it here:</p>
+
+<div class="quote">
+    <ol>
+        <li>For every pair of philosophers contending for a resource,
+            create a fork and give it to the philosopher with the lower
+            ID. Each fork can either be <i>dirty</i> or <i>clean</i>.
+            Initally, all the forks are dirty. <b>[This part has been
+            done for you.]</b></li>
+        <li>When a philosopher wants to use a set of resources
+            (<i>i.e.</i> eat), he must obtain the forks from his
+            contending neighbors. For all such forks he does not have,
+            he sends a request message.</li>
+        <li>When a philosopher with a fork receives a request message,
+            he keeps the fork if it is clean, but gives it up when it is
+            dirty. If he sends the fork over, he cleans the fork before
+            doing so.</li>
+        <li>After a philosopher is done eating, all his forks become
+            dirty. If another philosopher had previously requested one of
+            the forks, he cleans the fork and sends it.</li>
+    </ol>
+</div>
+
+<p><div class="points easy">1</div>This solution will only prevent
+deadlock when the system begins in an asymmetric state; the philosopher
+numbering requirement implicitly breaks the symmetry. In your
+<span class="code">README</span> file, explain what would happen if we
+began this solution from a state where all philosophers begin with
+dirty, left forks.</p>
+
+<p><div class="points hard">5</div>You have been given a skeleton class,
+<span class="code">TalkingPhilosopher</span>, which inherits from the
+<span class="code">Philosopher</span> class. Add any member functions
+you need to develop your own implementation of the Chandy-Misra solution
+described above, and implement your algorithm in the function
+<span class="code">talking</span>. Remember that the philosophers are
+running in their own threads, so they need to communicate in a
+thread-safe way. You may find the global array of philosophers helpful
+when you want a pointer to a philosopher with a particular ID. <b>Your
+solution should not deadlock, and every philosopher should eventually
+eat, or it is not a solution.</b> You can run
+<span class="code">philosophers -t</span> at a terminal
+prompt to observe your algorithm's behavior.</p>
+
+<h3>Part 2: Raytracing</h3>
+
+<p>You should familiarize yourself with the provided raytracer
+framework in the <span class="code">raytracer</span> directory. The
+following classes may be particularly important.</p>
+
+<ul>
+	<li><b><span class="code">Entity</span>:</b> A base class for world
+        objects, which determines all the functions such an object must
+        have. The only Entity that is currently defined is the
+        <span class="code">Sphere</span>. Relevant files are
+        <span class="code">src/Entity.h</span>,
+        <span class="code">src/Sphere.h</span>, and
+        <span class="code">src/Sphere.cpp</span>.</li>
+	<li><b><span class="code">Light</span>:</b> A
+        <span class="code">Light</span> describes a virtual light in
+        world space. Remember that lights cannot be seen themselves, but
+        their effects can. The only <span class="code">Light</span> that
+        is currently defined is the <span class="code">PointLight</span>.
+        Relevant files are <span class="code">src/Light.h</span>,
+        <span class="code">src/PointLight.h</span>,
+		and <span class="code">src/PointLight.cpp</span>.</li>
+	<li><b><span class="code">Ray</span>:</b> Defines a geometric ray
+        with an origin (a <b><span class="code">Vertex</span></b>)
+		and a displacement (also a <span class="code">Vertex</span>).
+        Thus, the endpoint of a <span class="code">Ray</span> is just
+        the origin plus the displacement. Relevant files are
+		<span class="code">src/Ray.cpp</span>,
+        <span class="code">Ray.h</span>, and
+        <span class="code">src/structs.cpp</span>.</li>
+</ul>
+
+<p>Other classes may generally be treated as black boxes, and you will
+find full documentation when you generate the Doxygen. You will be using
+the <span class="code">RaytracerSinglethreaded::run()</span> function
+as a guideline to write the
+<span class="code">RaytracerMultithreaded::run()</span> function. You
+can view the raytracer output by running
+<span class="code">bin/raytracer</span> at a terminal prompt, with
+the appropriate option for single- or multi-threaded.</p>
+
+<p><div class="points easy">3</div>The function
+<span class="code">run()</span> in
+<span class="code">src/RaytracerSinglethreaded.cpp</span> calculates a
+ray through the eye and a single pixel on the viewport; it calls
+<span class="code">trace()</span> on each of these rays.
+<span class="code">trace()</span> determines the correct color for the
+pixel and returns it, and <span class="code">run</span> paints the color
+on the viewport. Parallelize the <span class="code">run()</span>
+function by spawning at least two threads to handle different parts of
+the viewport. For example, one thread could paint the left half and
+another could paint the right half.</p>
+
+<p><div class="points easy">2</div>There is a
+<span class="code">memcheck</span> target in the Makefile for this
+assignment that will build a version of the code that renders a
+single frame and then exits. Use this to resolve all your memory
+leaks. If you use this Makefile target, you will need to
+<span class="code">make clean</span> and <span class="code">make raytracer</span>
+afterwards to revert to the normal behavior.</p>
+
+<h4>Helpful hints</h4>
+
+<p>To use a class member function in a thread requires some special syntax: the
+function must be qualified by the class name, and "this" (a pointer to the
+object itself) is an implicit argument to any member function, so "this" must be
+included as the first argument. An example follows:</p>
+
+<pre class="prettyprint code">
+class Foo
+{
+    Foo() { }
+    ~Foo() { }
+
+    void f() { /* Do something interesting here. */ }
+
+    /* The function that starts the thread. */
+    void run() {
+        std::thread *t = new std::thread(&Foo::f, this);
+        t->join();
+
+        delete t;
+    }
+};
+</pre>
+
+<p>The overhead associated with creating a thread is high, so you should
+try to create as few threads as possible and give them as much to do
+as possible. You will need at least a dual-core processor to observe
+the increased frames-per-second rate from multithreading.</p>
+
+<p>The Makefile provided has a <span class="code">callgrind</span>
+target that produces a file which you can view with kcachegrind if
+you would like. It will tell you how many times each function was
+called, how long it took to run, who called it, etc. If your code
+is unreasonably slow, this is a good debugging tool. However, if you use
+this Makefile target, you will need to <span class="code">make clean</span>
+and <span class="code">make raytracer</span> afterwards to revert to the
+normal behavior.</p>
+
+<div class="hint">If you have any questions about this week's assignment,
+please contact cs2tas-2016@caltech.edu, or show up at any TA's office
+hours.</div>
+
+</div>
+</body>
+</html>

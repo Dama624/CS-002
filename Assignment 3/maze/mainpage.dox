@@ -1,0 +1,17 @@
+/**
+@mainpage CS2 Assignment 3 - Data Structures - Maze Solving
+
+@section looking_around Looking around
+
+On the top bar you can see two sections: "Classes" and "Files". 
+
+Clicking on "Classes" will bring up a list of all classes in the project.
+This project has twelve: BreadthFirstSolver, Coordinate, CoordinateQueue,
+CoordinateStack, DepthFirstSolver, MazeGrid, MazeSolverApp, MazeSolverBase,
+queueitem, RecursiveBacktracker, stackitem, vitem.
+
+Clicking on "Files" will bring up a list of all files in the project.
+
+Clicking on any class or file name brings up a more detailed description
+of the class or file in question.
+*/

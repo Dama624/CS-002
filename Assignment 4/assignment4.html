@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin-top: -21px;
+        margin-left: 66px;
+        border-left: 1px solid gray;
+        padding-left: 24px;
+        margin-bottom: -15px;
+    }
+
+    div.content {
+        padding-top: 21px;
+        padding-bottom: 15px;
+    }
+
+    h1 {
+
+    }
+
+    hr {
+        color: gray;
+        background-color: gray;
+        height: 1px;
+        margin-left: -24px;
+        margin-right: -24px;
+        border: 0px solid gray;
+    }
+
+    .draft {
+        color: #008080;
+    }
+
+    table {
+        padding: 0;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    tr {
+        margin: 0;
+        padding: 2px;
+    }
+    td {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+    th {
+        border-left: 1px solid grey;
+        border-top: 1px solid grey;
+        margin: 0;
+        padding: 2px;
+    }
+
+
+    span.keyword {
+        font-weight: bold;
+    }
+    span.emph {
+        font-style: italic;
+    }
+    span.hilite {
+        text-decoration: underline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.author {
+        float: right;
+        margin-top: 27px;
+        color: grey;
+    }
+
+    .code {
+        font-family: monospace;
+        white-space: pre;
+    }
+    pre.code {
+        background: ghostwhite !important;
+        border: 2px dashed grey !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+        padding-right: 21px !important;
+        padding-left: 21px !important;
+    }
+    div.attention {
+        background: lightcoral;
+        border: 2px dashed red;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.quote {
+        background: lightblue;
+        border: 2px dashed steelblue;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.hint {
+        background: lightgreen;
+        border: 2px dashed green;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-right: 21px;
+        padding-left: 21px;
+    }
+    div.points {
+        float: left;
+        text-align: right;
+        margin-left: -88px;
+        min-width: 50px;
+    }
+    li div.points {
+        margin-left: -128px;
+    }
+    div.points.easy {
+        color: #008000;
+    }
+    div.points.hard {
+        color: #800000;
+        font-weight: bold;
+    }
+</style>
+<title>CS2 Assignment 4: Dynamic Programming</title>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=cpp"></script>
+</head>
+
+<body>
+<div class="content">
+
+<div class="author">Authors: Erika DeBenedictis and Ellen Price</div>
+<h1>CS2 Assignment 4: Dynamic Programming</h1>
+<h2>Due Tuesday, February 2, 2016, at 17:00 PST</h2>
+
+<h2>Introduction</h2>
+
+<p>This is the CS2 assignment on dynamic programming. In particular, you
+will be implementing algorithms for DNA alignment and seam carving.</p>
+
+<p>When finished, please enclose your submission as a ZIP file named
+<span class="code">cs2week4-[NAME].zip</span> or a tar.gz file named
+<span class="code">cs2week4-[NAME].tar.gz</span>, and upload it to the
+Week 4 assignment module on Moodle.</p>
+
+<h2>Prerequisites</h2>
+
+<p><ul>
+    <li>g++ 4.6.x+</li>
+    <li>libsdl1.2-dev</li>
+    <li>libsdl-gfx1.2-dev</li>
+</ul>
+
+Ask a TA if you need help retrieving these packages, or if these packages
+appear to be missing from the CS cluster.</p>
+
+<h2>Assignment (20 points)</h2>
+
+<p>For this assignment you will be implementing the DNA alignment and
+seam carving algorithms described below.</p>
+
+<div class="hint">Write all of your source code in the provided files,
+leaving the file structure intact. You submission should be your base
+directory, zipped, with <i>all</i> source files included. You do not need to
+include binaries or object files. As always, be sure that the code
+you submit compiles! Makefile targets have been provided for you.</div>
+
+<h3>Part 1: DNA alignment</h3>
+
+<p><b>The problem to solve:</b> Given two DNA sequences S and T, find an
+alignment of S and T with the greatest possible "score." A DNA sequence
+is a (non-empty) string consisting only of the characters A, C, T, and G.
+(However, the program you write will most likely be able to perform
+comparisons between arbitrary strings.)</p>
+
+<p>We can align sequences S and T by inserting gaps throughout the
+sequences, including at their beginnings and ends, and then lining them
+up. For example, if S is the sequence ACTGGCCGT and T is the sequence
+TGACGTAA, one possible alignment is the following:</p>
+
+<div class="code">
+S:   ACTGGCCGT--    T:   --TGA-CGTAA
+</div>
+
+<p>The dashes indicate locations where a gap has been inserted. We can
+compute the score for an alignment as follows.
+
+<ul>
+    <li>We define two negative integers called the gap score and the 
+        mismatch score and also</li>
+    <li>a positive integer called the match score.</li>
+</ul>
+
+For example, we could have a gap score of -5, a mismatch score of -1,
+and a match score of 2. These values would, in the case of DNA, be
+dependent on the chemistry of DNA as well as specifics about the
+mechanisms by which DNA replication can produce errors.</p>
+
+<p>To compute the score for a given alignment, we sum up the scores for
+each position in the alignment. If at a given position, one sequence has
+a gap and the other does not, then we use the gap score. If both
+sequences have characters, but the characters are different, we use the
+mismatch score. If both sequences have the same character, we use the
+match score. We can describe the way the sequences fit together with an
+instruction string which as a "|" for every match, a "*" for every
+mismatch, and a "s" or "t" in every gap, indicating which string has a
+character in the gap. For example, using the scores given above, the score
+of the example alignment above is:</p>
+
+<div class="code">
+S:        A   C    T   G   G    C    C   G   T   -   -
+T:        -   -    T   G   A    -    C   G   T   A   A
+Score:    -5  -5   2   2   -1   -5   2   2   2   -5  -5
+Inst:     s   s    |   |   *    s    |   |   |   t   t
+Score for the alignment: -16
+</div>
+
+<p>This is not, however, the way to combine these two strings with the
+highest score. Since we've set gaps to have such a high penalty, the best
+score is this:</p>
+
+<div class="code">
+S:      A   C  T  G  G  C  C  G  T
+T:      T   G  A  C  G  T  A  A
+Score:  -1 -1 -1 -1  2 -1 -1 -1 -5
+Inst:   *   *  *  *  |  *  *  *  s
+Score for this alignment: -10
+</div>
+
+<p>This problem is not only relevant for DNA sequence alignment. It's
+also useful in things like plagiarism detection... and quantifying how
+similar the words "abracadabra" and "avada kedavra" are:</p>
+
+<div class="code">
+S:      abr aca dabra
+T:      avada kedavra
+Inst:   |**t|**t||*||
+Score for this alignment: -3
+</div>
+
+<p><div class="points easy">3</div>Before you start typing, map out your
+approach to this problem on paper. Think about the base cases; think about
+how to break the problem into sub problems. Once you figure out how
+recursion fits into the solution, it's fairly easy to see how memoization
+can speed up the computation. Type your outline and save it as
+<span class="code">dna/align_outline.txt</span>.</p>
+
+<p><div class="points easy">5</div>Finish the TODO in the function
+<span class="code">align</span>, found in <span class="code">dna/align.cpp</span>.
+As input, align takes two strings <span class="code">s</span> and
+<span class="code">t</span> and returns an <span class="code">align_result</span>
+object, which contains the score of the best alignment and the instruction
+string for how <span class="code">s</span> and <span class="code">t</span>
+fit together. The function <span class="code">DNA_align</span> will take
+this result and do printing for you. You'll notice that without
+memoization the 'abracadabra' example takes a long(er than I want to wait)
+time to run!</p>
+
+<div class="quote">Compile this part of the assignment by running
+<span class="code">make align</span> in the <span class="code">dna</span>
+directory.</div>
+
+<p><div class="points hard">3</div>Look up a couple of real-world DNA
+sequences and align them. Put the aligned sequences, where they came
+from, and a few words about what they are in a file called
+<span class="code">dna/some_alignments.txt</span>. For instance you
+could look at the
+<a href="http://www.ncbi.nlm.nih.gov/genomes/FLU/FLU.html">Influenza
+Database</a>. <b>To receive full credit for this portion, you need to explain
+why the comparison you have made is significant.</b></p>
+
+<h3>Part 2: Seam carving</h3>
+
+<p>Seam carving is a method for content aware image resizing. The idea
+is to resize images by removing the lowest energy seams, or paths, from
+the image.</p>
+
+<p>For an arbitary image, we can compute a <span class="keyword">saliency
+map</span>, which is a grayscale image derived from the color image; the
+intensity of each pixel of the saliency map is a measure of how much
+"energy" that pixel has in the context of the image. Lighter areas on the
+saliency map correspond to higher energy areas of the original image, so
+they have a higher cost than low-energy (darker) areas.</p>
+
+<p>To determine the lowest-cost path, we create a cost matrix
+from the saliency map. The first row of the cost matrix is simply the
+first row of the saliency map (since there are no pixels above it). For
+each subsequent row, we examine the pixel directly above, directly above
+and one pixel to the left, and directly above and one pixel to the right
+of the pixel we want to calculate cost for. Then, the value we should
+store for that pixel is the minimum value of the three aforementioned
+energies added to the energy of the pixel in question. For example,
+suppose we have a saliency map that looks like this:</p>
+
+<table>
+    <tr>
+        <td>5</td>
+        <td>6</td>
+        <td>1</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>9</td>
+        <td>0</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>8</td>
+        <td>7</td>
+        <td>2</td>
+    </tr>
+</table>
+
+<p>We want to compute a cost matrix from the energy values given. For
+the first row, we just copy the first row of the saliency map. How do
+we compute the second row?</p>
+
+<ol>
+    <li>The first value on the second row of the saliency map is 2.
+        There are only two pixels above the pixel we want to calculate
+        for, since we are on an edge; the minimum of 5 and 6 is 5,
+        so add 5 + 2 = 7.</li>
+    <li>The second value on the second row of the saliency map is 9.
+        There are three pixels above the pixel we want to calculate for;
+        the minimum of 5, 6, and 1 is 1, so add 9 + 1 = 10.</li>
+    <li>The third value on the second row of the saliency map is 0, and
+        again, there are three pixels above the pixel we want to calculate
+        for. The minimum of 6, 1, and 3 is 1, so add 0 + 1 = 1.</li>
+    <li>The last value on the second row of the saliency map is 5; we
+        are on an edge again, so there are only two pixels above the
+        pixel we want to calculate for. The minimum of 1 and 3 is 1, so
+        add 5 + 1 = 6.</li>
+</ol>
+
+<p>The final cost values are these:</p>
+
+<table>
+    <tr>
+        <td>5</td>
+        <td>6</td>
+        <td>1</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>10</td>
+        <td>1</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>9</td>
+        <td>8</td>
+        <td>3</td>
+    </tr>
+</table>
+
+<p>Notice that, for the third row, we must look at the previous row
+of the cost matrix to get the value to add to the saliency for the
+current pixel, since the row 2 in the cost matrix is different from
+row 2 in the saliency map.</p>
+
+<p>What happens when we get to the end? The seam ends on the minimum
+cost pixel in the last row. From there, we can follow our cost matrix
+up by choosing the minimum cost from the pixel directly above, directly
+above and one pixel to the left, and directly above and one pixel
+to the right. <b>Remember edge conditions. Corners only have two pixels
+above and adjacent to them.</b></p>
+
+<p><div class="points easy">4</div>Answer the following analysis questions in a file <span class="code">seamcarve/recursive.txt</span>.
+<ol>
+    <li>What part of the above algorithm uses dynamic programming?</li>
+    <li>The seam-finding algorithm can be implemented recursively, without dynamic programming. Explain how.</li>
+    <li>For an NxN image, what is the complexity of the recursive algorithm without dynamic programming? State the complexity in big-O notation, as a function of N.</li>
+    <li>Using the recursive algorithm without dynamic programming, how long would it take to find a seam on a 50x50 image if 1 billion computations were made per second? State a reasonable lower bound. Hint: The answer should be huge.</li>
+</ol>
+
+<p><div class="points easy">5</div>Write the function
+<span class="code">DoSeamCarve</span> in
+<span class="code">seamcarve/src/SeamCarveAlgorithm.cpp</span> using dynamic
+programming techniques. This function takes a saliency map (a
+2-dimensional array of energies of individual pixels), the width of the saliency
+map, and the height of the saliency map as parameters;
+see the comments and function headers in the provided file for a more
+detailed explanation of these inputs. The function should return the
+x-coordinates of the seam, starting from the top of the image, in an array.</p>
+
+<div class="quote">Compile this part of the assignment by running
+<span class="code">make seamcarve</span> in the <span class="code">seamcarve</span>
+directory.</div>
+
+<p>If you want to create a 2-dimensional array for your seam carving
+implementation (this may come in handy!), here is the proper way to do so:</p>
+
+<pre class="prettyprint code">
+// Define a width and height for your array
+int w = WIDTH, h = HEIGHT;
+
+// Allocate memory for the array
+int **arr = new int*[w];
+for (int i = 0; i < w; i++)
+    arr[i] = new int[h];
+
+// Now we can access whatever element we want!
+arr[0][2] = 5;
+
+// But when we're done, we have to deallocate
+for (int i = 0; i < w; i++)
+    delete[] arr[i];
+delete[] arr;
+</pre>
+
+<p>To test your implementation with a GUI, run <span class="code">./bin/seamcarve images/SOME_IMAGE.bmp</span>, replacing <span class="code">SOME_IMAGE.bmp</span> with one of the images
+provided in the <span class="code">images/</span> directory; you should test
+with each of the three images. You can switch between image and energy views by
+pressing "i" and "e", respectively; pressing "f" finds a seam with your function,
+and pressing the space bar removes a seam. If your seam intersects many white
+areas in the "energy" view, you may be doing something wrong.</p>
+
+<h2>Notes and hints</h2>
+
+As something between a hint and a test script, here are a good set of
+short strings and their proper alignment instruction strings (with -5,
+-1, 2 as the constants as mentioned above).
+
+<table>
+    <tr>
+        <td>S</td>
+        <td>T</td>
+        <td>Inst</td>
+    </tr>
+    <tr>
+        <td>'' (empty)</td>
+        <td>'a'</td>
+        <td>'t'</td>
+    </tr>
+    <tr>
+        <td>'a'</td>
+        <td>''</td>
+        <td>'s'</td>
+    </tr>
+    <tr>
+        <td>'a'</td>
+        <td>'b'</td>
+        <td>'*'</td>
+    </tr>
+    <tr>
+        <td>'a'</td>
+        <td>'a'</td>
+        <td>'|'</td>
+    </tr>
+    <tr>
+        <td>'b'</td>
+        <td>'ba'</td>
+        <td>|t</td>
+    </tr>
+    <tr>
+        <td>'b'</td>
+        <td>'ab'</td>
+        <td>'t|'</td>
+    </tr>
+    <tr>
+        <td>'ab'</td>
+        <td>'b'</td>
+        <td>'s|'</td>
+    </tr>
+    <tr>
+        <td>'ba'</td>
+        <td>'b'</td>
+        <td>'|s'</td>
+    </tr>
+    <tr>
+        <td>'ab'</td>
+        <td>'ba'</td>
+        <td>'**'</td>
+    </tr>
+    <tr>
+        <td>'abc'</td>
+        <td>'ac'</td>
+        <td>'|s|'</td>
+    </tr>
+    <tr>
+        <td>'abc'</td>
+        <td>'adc'</td>
+        <td>'|*|'</td>
+    </tr>
+</table>
+
+<p>Previous incarnation of this assignment, if you're curious:
+<a href="http://courses.cms.caltech.edu/cs2/DNA-DynamicProgramming/">link</a>.</p>
+
+</body>
+</html>

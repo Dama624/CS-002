@@ -1,0 +1,12 @@
+Base cases: When comparing anything (including empty string) to empty string
+Starting with two strings, we make recursive calls to compare shorter versions of these two strings:
+	ver. 1) introduce a gap in string 1, remove a character in string 2
+	ver. 2) remove a character in both strings
+	ver. 3) introduce a gap in string 2, remove a character in string 1
+When a base case is reached, whichever has the highest score is the best alignment
+
+As it is now, this outline is strictly recursive.
+
+Perform dynamic programming by memoizing.
+We memoize specifically the comparison of two strings, their score, and their alignment instruction.
+
