@@ -10,5 +10,7 @@ This is an introductory class that covers a variety of subjects:
 * Concurrency and network programming
 * Basic numerical computation methods
 
+These assignments were written primarily in C++.
+
 ----
 Assignment questions are located in the assignment*.html files within each Assignment directory.
